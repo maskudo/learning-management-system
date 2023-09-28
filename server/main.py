@@ -1,4 +1,5 @@
 from models import Base
+from models.Category import Category
 from models.User import User
 from sqlalchemy.orm import sessionmaker
 from ariadne import (
@@ -48,12 +49,10 @@ def resolve_users(*_):
 def resolve_login_user(*_, email, password):
     user = session.query(User).where(User.email == email).first()
     if not user:
-        print("no user")
         return None
     hashed_password = hash_password(password)
     if hashed_password == user.password.__str__():
         return user
-    print("hash not mathc")
     return None
 
 
@@ -70,7 +69,7 @@ def resolve_delete_User(*_, userId):
         session.delete(user)
         session.commit()
         return True
-    except:
+    except Exception:
         return False
 
 
@@ -91,6 +90,29 @@ def resolve_add_user(*_, user):
     session.add(userObj)
     session.commit()
     return userObj
+
+
+@mutate.field("addCategory")
+def resolve_add_category(*_, name, description):
+    category_check = session.query(Category).where(Category.name == name).first()
+    if category_check:
+        return
+
+    categoryObj = Category(name, description)
+    session.add(categoryObj)
+    session.commit()
+    return categoryObj
+
+
+@mutate.field("deleteCategory")
+def resolve_delete_category(*_, categoryId):
+    try:
+        category = session.query(Category).where(Category.id == categoryId).one()
+        session.delete(category)
+        session.commit()
+        return True
+    except Exception:
+        return False
 
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)

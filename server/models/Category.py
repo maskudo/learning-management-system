@@ -6,8 +6,8 @@ from models import Base
 class Category(Base):
     __tablename__ = "categories"
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    description = Column(String(150))
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(String(150), nullable=True)
     created_at = Column(Date, default=date.today)
 
     def __init__(self, name: str, description: str) -> None:

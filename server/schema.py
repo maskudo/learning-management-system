@@ -18,6 +18,12 @@ type_defs = gql(
         role: Role!
     }
 
+    type Category {
+        id: Int!
+        name: String!
+        description: String
+    }
+
 
     input AddUserInput {
         name: String!
@@ -31,6 +37,8 @@ type_defs = gql(
     type Mutation {
         addUser(user: AddUserInput!): User 
         deleteUser(userId: Int!): Boolean
+        addCategory(name: String!, description: String): Category
+        deleteCategory(categoryId: Int!): Boolean
     }
 
     type Query {
