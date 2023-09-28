@@ -11,6 +11,8 @@ ariadne = "^0.20.1"
 sqlalchemy = "^2.0.21"
 fastapi = "^0.103.1"
 uvicorn = "^0.23.2"
+psycopg2 = "^2.9.7"
+sqlalchemy-utils = "^0.41.1"
 
 
 [build-system]

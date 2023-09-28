@@ -13,7 +13,10 @@ class User(Base):
     birth_date = Column(Date, nullable=False)
     phone_no = Column(String(10), nullable=False)
     created_at = Column(Date, default=datetime.now)
-    role = Column(Enum("admin", "teacher", "student"), nullable=False)
+    role = Column(
+        Enum("admin", "teacher", "student", name="role_enum", create_type=False),
+        nullable=False,
+    )
 
     def __init__(
         self,
