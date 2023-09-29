@@ -6,7 +6,7 @@ from models import Base
 class Course(Base):
     __tablename__ = "courses"
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False, unique=True)
     abstract = Column(String)
     bibliography = Column(String)
     description = Column(String)

@@ -1,5 +1,7 @@
 from models import Base
 from models.Category import Category
+from models.Course import Course
+from models.Enrollment import Enrollment
 from models.User import User
 from sqlalchemy.orm import sessionmaker
 from ariadne import (
@@ -75,33 +77,31 @@ def resolve_delete_User(*_, userId):
 
 @mutate.field("addUser")
 def resolve_add_user(*_, user):
-    user_check = session.query(User).where(User.email == user["email"]).first()
-    if user_check:
-        return
-
-    userObj = User(
-        user["name"],
-        user["email"],
-        user["password"],
-        user["birth_date"],
-        user["phone_no"],
-        user["role"],
-    )
-    session.add(userObj)
-    session.commit()
-    return userObj
+    try:
+        userObj = User(
+            user["name"],
+            user["email"],
+            user["password"],
+            user["birth_date"],
+            user["phone_no"],
+            user["role"],
+        )
+        session.add(userObj)
+        session.commit()
+        return userObj
+    except Exception:
+        return None
 
 
 @mutate.field("addCategory")
 def resolve_add_category(*_, name, description):
-    category_check = session.query(Category).where(Category.name == name).first()
-    if category_check:
-        return
-
-    categoryObj = Category(name, description)
-    session.add(categoryObj)
-    session.commit()
-    return categoryObj
+    try:
+        categoryObj = Category(name, description)
+        session.add(categoryObj)
+        session.commit()
+        return categoryObj
+    except Exception:
+        return None
 
 
 @mutate.field("deleteCategory")
@@ -113,6 +113,61 @@ def resolve_delete_category(*_, categoryId):
         return True
     except Exception:
         return False
+
+
+@query.field("courses")
+def resolve_courses(*_):
+    return session.query(Course)
+
+
+@query.field("course")
+def resolve_course(*_, courseId):
+    course = session.query(Course).where(Course.id == courseId).one()
+    return course
+
+
+@mutate.field("addCourse")
+def resolve_add_course(*_, course):
+    try:
+        courseObj = Course(
+            course["name"],
+            course.get("description", None),
+            course.get("abstract", None),
+            course.get("bibliography", None),
+            course["category"],
+        )
+        session.add(courseObj)
+        session.commit()
+        return courseObj
+    except Exception:
+        return None
+
+
+@mutate.field("deleteCourse")
+def resolve_delete_course(*_, courseId):
+    try:
+        course = session.query(Course).where(Course.id == courseId).one()
+        session.delete(course)
+        session.commit()
+        return True
+    except Exception:
+        return False
+
+
+@mutate.field("addEnrollment")
+def resolve_add_enrollment(*_, enrollment):
+    try:
+        enrollmentObj = Enrollment(
+            enrollment["student_id"],
+            enrollment["course_id"],
+            enrollment.get("cancelled", False),
+            enrollment.get("cancellation_reason", None),
+        )
+        session.add(enrollmentObj)
+        session.commit()
+        return enrollmentObj
+    except Exception:
+        return None
 
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)

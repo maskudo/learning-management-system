@@ -24,6 +24,46 @@ type_defs = gql(
         description: String
     }
 
+    type Course {
+        id: Int!
+        name: String!
+        abstract: String
+        bibliography: String
+        description: String
+        created_at : Datetime!
+        category: Category!
+    }
+
+    type Enrollment {
+        id: Int!
+        enrollment_date: Datetime!
+        student_id: Int!
+        course_id: Int!
+        cancelled: Boolean
+        cancellation_reason: String
+    }
+
+    input AddEnrollmentInput{
+        student_id: Int!
+        course_id: Int!
+        cancelled: Boolean
+        cancellation_reason: String
+        
+    }
+
+    input UpdateEnrollmentInput {
+        id: Int!
+        cancelled: Boolean
+        cancellation_reason: String
+    }
+
+    input AddCourseInput {
+        name: String!
+        abstract: String
+        bibliography: String
+        description: String
+        category: Int!
+    }
 
     input AddUserInput {
         name: String!
@@ -39,12 +79,18 @@ type_defs = gql(
         deleteUser(userId: Int!): Boolean
         addCategory(name: String!, description: String): Category
         deleteCategory(categoryId: Int!): Boolean
+        addCourse(course: AddCourseInput!): Course
+        deleteCourse(courseId: Int!): Boolean
+        addEnrollment(enrollment: AddEnrollmentInput!): Enrollment
+        updateEnrollment(enrollment: UpdateEnrollmentInput!): Enrollment
     }
 
     type Query {
         users: [User!]
         user(userId: Int!): User
         login(email: String, password: String): User
+        courses: [Course!]
+        course(courseId: Int!): Course
     }
 """
 )

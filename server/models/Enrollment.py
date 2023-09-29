@@ -1,5 +1,13 @@
 from datetime import date
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date
+from sqlalchemy import (
+    Boolean,
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    Date,
+    UniqueConstraint,
+)
 from models import Base
 
 
@@ -11,10 +19,17 @@ class Enrollment(Base):
     course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
     cancelled = Column(Boolean, default=False)
     cancellation_reason = Column(String)
+    __table_args__ = (
+        UniqueConstraint("student_id", "course_id", name="uq_student_course_pair"),
+    )
 
-    def __init__(self, student_id: int, course_id: int) -> None:
+    def __init__(
+        self, student_id: int, course_id: int, cancelled: bool, cancellation_reason: str
+    ) -> None:
         self.student_id = student_id
         self.course_id = course_id
+        self.cancelled = cancelled
+        self.cancellation_reason = cancellation_reason
 
     def __repr__(self) -> str:
         return f"Enrollment(id='{self.id}'), date='{self.enrollment_date}'"
