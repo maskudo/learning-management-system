@@ -37,8 +37,8 @@ type_defs = gql(
     type Enrollment {
         id: Int!
         enrollment_date: Datetime!
-        student_id: Int!
-        course_id: Int!
+        student: User!
+        course: Course!
         cancelled: Boolean
         cancellation_reason: String
     }

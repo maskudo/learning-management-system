@@ -1,5 +1,6 @@
 from datetime import date
 from sqlalchemy import Column, ForeignKey, Integer, String, Date
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -11,7 +12,8 @@ class Course(Base):
     bibliography = Column(String)
     description = Column(String)
     created_at = Column(Date, default=date.today)
-    category = Column(Integer, ForeignKey("categories.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+    category = relationship("Category", cascade="delete, merge, save-update")
 
     def __init__(
         self,
@@ -25,7 +27,7 @@ class Course(Base):
         self.description = description
         self.abstract = abstract
         self.bibliography = bibliography
-        self.category = category
+        self.category_id = category
 
     def __repr__(self) -> str:
         return f"Course(name='{self.name}'), description='{self.description}'"

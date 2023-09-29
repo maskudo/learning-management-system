@@ -8,6 +8,7 @@ from sqlalchemy import (
     Date,
     UniqueConstraint,
 )
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -19,6 +20,8 @@ class Enrollment(Base):
     course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
     cancelled = Column(Boolean, default=False)
     cancellation_reason = Column(String)
+    course = relationship("Course", cascade="delete, merge, save-update")
+    student = relationship("User", cascade="delete, merge, save-update")
     __table_args__ = (
         UniqueConstraint("student_id", "course_id", name="uq_student_course_pair"),
     )
