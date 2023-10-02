@@ -1,7 +1,9 @@
 from ariadne.asgi.handlers import GraphQLHTTPHandler
 from ariadne.exceptions import HttpBadRequestError
 from graphql.type import GraphQLResolveInfo
+from starlette.middleware import Middleware
 from middleware.JWTManager import JWTManager
+from starlette.middleware.cors import CORSMiddleware
 from models.Category import Category
 from models.Course import Course
 from models.Enrollment import Enrollment
@@ -39,7 +41,7 @@ def resolve_users(*_):
     return users
 
 
-@query.field("login")
+@mutate.field("login")
 def resolve_login_user(*_, email, password):
     existing_user = session.query(User).where(User.email == email).first()
     if not existing_user:
@@ -166,7 +168,8 @@ def resolve_add_enrollment(*_, enrollment):
 
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)
-app = FastAPI(debug=True)
+middleware = [Middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["POST"])]
+app = FastAPI(debug=True, middleware=middleware)
 
 
 def protect_route(resolver, obj, info: GraphQLResolveInfo, **args):

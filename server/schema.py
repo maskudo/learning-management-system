@@ -80,6 +80,7 @@ type_defs = gql(
     
     type Mutation {
         addUser(user: AddUserInput!): User 
+        login(email: String, password: String): LoginInfo
         deleteUser(userId: Int!): Boolean
         addCategory(name: String!, description: String): Category
         deleteCategory(categoryId: Int!): Boolean
@@ -92,7 +93,6 @@ type_defs = gql(
     type Query {
         users: [User!]
         user(userId: Int!): User
-        login(email: String, password: String): LoginInfo
         courses: [Course!]
         course(courseId: Int!): Course
     }

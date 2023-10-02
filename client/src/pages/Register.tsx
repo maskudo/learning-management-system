@@ -1,13 +1,26 @@
 import { Link } from 'react-router-dom';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Radio } from 'antd';
 import { companyLogo } from '../constants/images';
 import FormContainer from '../components/auth/FormContainer';
+import { REGISTER } from '../graphql/mutations';
+import { useMutation } from '@apollo/client';
 
 export default function Register() {
   const handleSubmit = async (values) => {
-    const { username, password } = values;
-    console.log({ username, password });
+    const { password, email, name, birth_date, phone_no, role } = values;
+    console.log(values);
+    // const { data } = await register({
+    //   variables: {
+    //     email,
+    //     password,
+    //     name,
+    //     birth_date,
+    //     phone_no,
+    //     role,
+    //   },
+    // });
   };
+  const [register] = useMutation(REGISTER);
 
   return (
     <FormContainer>
@@ -18,32 +31,55 @@ export default function Register() {
       </header>
       <Form className=" m-auto" layout="vertical" onFinish={handleSubmit}>
         <Form.Item
-          label="Username"
-          name="username"
+          label="Name"
+          name="name"
           required
           rules={[
-            { required: true, message: 'Username is required' },
             {
-              min: 3,
-              message: 'Username must be at least 3 characters long.',
-            },
-            {
-              max: 20,
-
-              message: 'Username must be at most 20 characters long.',
-            },
-            {
-              pattern: /^[a-zA-Z0-9_]+$/,
+              pattern: /^[A-Za-z\-'\s]{3,50}$/,
               message:
-                'Username can contain only letters, numbers and _ characters. ',
+                'Name can only contain alphabets, hyphen and whitespace and must be between 3 and 50 characters long.',
             },
           ]}
         >
           <Input required />
         </Form.Item>
         <Form.Item
+          label="Email"
+          name="email"
+          required
+          rules={[
+            { required: true, message: 'email is required' },
+
+            { type: 'email', message: 'Please input a valid email.' },
+          ]}
+        >
+          <Input required />
+        </Form.Item>
+        <Form.Item
+          label="Phone"
+          name="phone_no"
+          required
+          rules={[
+            {
+              pattern: /^[0-9]{10}$/,
+              message: 'Phone Number must be a 10 digit number.',
+            },
+          ]}
+        >
+          <Input required />
+        </Form.Item>
+        <Form.Item name="role" required>
+          <Radio.Group>
+            <Radio value={'student'}>Student</Radio>
+            <Radio value={'teacher'}>Teacher</Radio>
+            <Radio value={'admin'}>Admin</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
           label="Password"
           name="password"
+          required
           rules={[
             {
               max: 30,

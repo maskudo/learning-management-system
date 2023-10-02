@@ -1,13 +1,26 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useNavigation } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { companyLogo } from '../constants/images';
 import FormContainer from '../components/auth/FormContainer';
+import { LOGIN } from '../graphql/mutations';
+import { useMutation } from '@apollo/client';
 
 export default function Login() {
-  const handleSubmit = async (values) => {
-    const { password, username } = values;
-    console.log({ username, password });
+  const navigate = useNavigate();
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    const { password, email } = values;
+    const { data } = await login({
+      variables: {
+        email,
+        password,
+      },
+    });
+    if (data.login) {
+      localStorage.setItem('login', JSON.stringify(data.login));
+      navigate('/');
+    }
   };
+  const [login] = useMutation(LOGIN);
 
   return (
     <FormContainer>
@@ -18,7 +31,7 @@ export default function Login() {
         <h1 className="text-center text-3xl text-gray-700">Welcome Back!</h1>
       </header>
       <Form className=" m-auto" layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="Username" name="username">
+        <Form.Item label="Email" name="email">
           <Input required />
         </Form.Item>
         <Form.Item label="Password" name="password">
