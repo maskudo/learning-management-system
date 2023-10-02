@@ -1,9 +1,11 @@
-from models import Base
+from ariadne.asgi.handlers import GraphQLHTTPHandler
+from ariadne.exceptions import HttpBadRequestError
+from graphql.type import GraphQLResolveInfo
+from middleware.JWTManager import JWTManager
 from models.Category import Category
 from models.Course import Course
 from models.Enrollment import Enrollment
 from models.User import User
-from sqlalchemy.orm import sessionmaker
 from ariadne import (
     ObjectType,
     QueryType,
@@ -14,20 +16,10 @@ from ariadne import (
 from ariadne.asgi import GraphQL
 from schema import type_defs
 from fastapi import FastAPI
-from sqlalchemy import create_engine
-from sqlalchemy_utils import create_database, database_exists
 
 from utils.hash import hash_password
+from db import session
 
-
-DATABASE_URI = "postgresql://postgres:test1234@localhost:5432/learningmgmtsystem"
-engine = create_engine(DATABASE_URI)
-if not database_exists(engine.url):
-    create_database(engine.url)
-
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 subscription = SubscriptionType()
 query = QueryType()
@@ -49,13 +41,16 @@ def resolve_users(*_):
 
 @query.field("login")
 def resolve_login_user(*_, email, password):
-    user = session.query(User).where(User.email == email).first()
-    if not user:
+    existing_user = session.query(User).where(User.email == email).first()
+    if not existing_user:
         return None
+
     hashed_password = hash_password(password)
-    if hashed_password == user.password.__str__():
-        return user
-    return None
+    if hashed_password != existing_user.password.__str__():
+        return None
+    token = JWTManager.generate_token({"sub": email})
+    login_info = {"email": email, "token": token}
+    return login_info
 
 
 @query.field("user")
@@ -172,4 +167,29 @@ def resolve_add_enrollment(*_, enrollment):
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)
 app = FastAPI(debug=True)
-app.mount("/graphql/", GraphQL(schema, debug=True))
+
+
+def protect_route(resolver, obj, info: GraphQLResolveInfo, **args):
+    non_routed_mutations = ["register", "login"]
+    mutation_name = info.operation.name.value
+    if mutation_name in non_routed_mutations:
+        return resolver(obj, info, **args)
+    headers = info.context["request"].headers
+    authorization_header = headers.get("Authorization")
+    if not authorization_header:
+        raise HttpBadRequestError("Authorization header missing or empty")
+    token = authorization_header.split(" ")[-1]
+    verified = JWTManager.verify_jwt(token)
+    if not verified:
+        raise HttpBadRequestError("Expired or invalid JWT")
+
+    value = resolver(obj, info, **args)
+    return value
+
+
+app.mount(
+    "/graphql/",
+    GraphQL(
+        schema, debug=True, http_handler=GraphQLHTTPHandler(middleware=[protect_route])
+    ),
+)

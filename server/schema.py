@@ -73,6 +73,10 @@ type_defs = gql(
         phone_no: String!
         role: Role!
     }
+    type LoginInfo {
+        email: String!
+        token: String!
+    }
     
     type Mutation {
         addUser(user: AddUserInput!): User 
@@ -88,7 +92,7 @@ type_defs = gql(
     type Query {
         users: [User!]
         user(userId: Int!): User
-        login(email: String, password: String): User
+        login(email: String, password: String): LoginInfo
         courses: [Course!]
         course(courseId: Int!): Course
     }
