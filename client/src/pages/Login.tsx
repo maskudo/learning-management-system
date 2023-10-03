@@ -1,8 +1,8 @@
-import { Link, useNavigate, useNavigation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
-import { companyLogo } from '../constants/images';
-import FormContainer from '../components/auth/FormContainer';
-import { LOGIN } from '../graphql/mutations';
+import { companyLogo } from '@/constants/images';
+import FormContainer from '@/components/auth/FormContainer';
+import { LOGIN } from '@/graphql/mutations';
 import { useMutation } from '@apollo/client';
 
 export default function Login() {

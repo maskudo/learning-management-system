@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Radio, DatePicker, message } from 'antd';
-import { companyLogo } from '../constants/images';
-import FormContainer from '../components/auth/FormContainer';
-import { REGISTER } from '../graphql/mutations';
+import { companyLogo } from '@/constants/images';
+import FormContainer from '@/components/auth/FormContainer';
+import { REGISTER } from '@/graphql/mutations';
 import { useMutation } from '@apollo/client';
 
 export default function Register() {
