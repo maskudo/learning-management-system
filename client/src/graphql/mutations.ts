@@ -11,7 +11,7 @@ export const LOGIN = gql`
 
 export const REGISTER = gql`
   mutation register($user: AddUserInput!) {
-    addUser(user: $user) {
+    register(user: $user) {
       name
       email
       birth_date

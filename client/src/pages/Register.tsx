@@ -1,26 +1,38 @@
-import { Link } from 'react-router-dom';
-import { Form, Input, Button, Radio } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { Form, Input, Button, Radio, DatePicker, message } from 'antd';
 import { companyLogo } from '../constants/images';
 import FormContainer from '../components/auth/FormContainer';
 import { REGISTER } from '../graphql/mutations';
 import { useMutation } from '@apollo/client';
 
 export default function Register() {
+  const [register] = useMutation(REGISTER);
+  const navigate = useNavigate();
   const handleSubmit = async (values) => {
     const { password, email, name, birth_date, phone_no, role } = values;
-    console.log(values);
-    // const { data } = await register({
-    //   variables: {
-    //     email,
-    //     password,
-    //     name,
-    //     birth_date,
-    //     phone_no,
-    //     role,
-    //   },
-    // });
+    try {
+      const { data } = await register({
+        variables: {
+          user: {
+            email,
+            name,
+            password,
+            birth_date,
+            phone_no,
+            role,
+          },
+        },
+      });
+      if (!data.register) {
+        message.error('Error creating account. Try again later.');
+        return;
+      }
+      message.success('Account created Successfully!');
+      navigate('/login');
+    } catch (e) {
+      message.error(e.message);
+    }
   };
-  const [register] = useMutation(REGISTER);
 
   return (
     <FormContainer>
@@ -69,12 +81,35 @@ export default function Register() {
         >
           <Input required />
         </Form.Item>
-        <Form.Item name="role" required>
+        <Form.Item
+          name="role"
+          rules={[{ required: true, message: 'Please pick a role.' }]}
+        >
           <Radio.Group>
             <Radio value={'student'}>Student</Radio>
             <Radio value={'teacher'}>Teacher</Radio>
             <Radio value={'admin'}>Admin</Radio>
           </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          name="birth_date"
+          rules={[
+            { required: true, message: 'Birth date is required.' },
+            {
+              validator: async (_, date, __) => {
+                const birth_date = new Date(date);
+                const now = new Date();
+                const ageDifferenceMs = now - birth_date;
+                const ageInYears =
+                  ageDifferenceMs / (1000 * 60 * 60 * 24 * 365);
+                if (ageInYears < 18 || ageInYears > 80) {
+                  return Promise.reject('Age must be between 18 to 80 years.');
+                }
+              },
+            },
+          ]}
+        >
+          <DatePicker format={'YYYY-MM-DD'} />
         </Form.Item>
         <Form.Item
           label="Password"

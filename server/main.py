@@ -72,22 +72,25 @@ def resolve_delete_User(*_, userId):
         return False
 
 
-@mutate.field("addUser")
-def resolve_add_user(*_, user):
-    try:
-        userObj = User(
-            user["name"],
-            user["email"],
-            user["password"],
-            user["birth_date"],
-            user["phone_no"],
-            user["role"],
-        )
-        session.add(userObj)
-        session.commit()
-        return userObj
-    except Exception:
-        return None
+@mutate.field("register")
+def resolve_register(*_, user):
+    email_check = session.query(User).where(User.email == user["email"]).first()
+    phone_check = session.query(User).where(User.phone_no == user["phone_no"]).first()
+    if email_check:
+        raise HttpBadRequestError("Email already in use!")
+    elif phone_check:
+        raise HttpBadRequestError("Phone number already in use!")
+    userObj = User(
+        user["name"],
+        user["email"],
+        user["password"],
+        user["birth_date"],
+        user["phone_no"],
+        user["role"],
+    )
+    session.add(userObj)
+    session.commit()
+    return userObj
 
 
 @mutate.field("addCategory")

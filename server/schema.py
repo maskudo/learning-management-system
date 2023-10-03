@@ -79,7 +79,7 @@ type_defs = gql(
     }
     
     type Mutation {
-        addUser(user: AddUserInput!): User 
+        register(user: AddUserInput!): User 
         login(email: String, password: String): LoginInfo
         deleteUser(userId: Int!): Boolean
         addCategory(name: String!, description: String): Category
