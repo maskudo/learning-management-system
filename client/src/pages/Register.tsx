@@ -81,36 +81,40 @@ export default function Register() {
         >
           <Input required />
         </Form.Item>
-        <Form.Item
-          name="role"
-          rules={[{ required: true, message: 'Please pick a role.' }]}
-        >
-          <Radio.Group>
-            <Radio value={'student'}>Student</Radio>
-            <Radio value={'teacher'}>Teacher</Radio>
-            <Radio value={'admin'}>Admin</Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          name="birth_date"
-          rules={[
-            { required: true, message: 'Birth date is required.' },
-            {
-              validator: async (_, date, __) => {
-                const birth_date = new Date(date);
-                const now = new Date();
-                const ageDifferenceMs = now - birth_date;
-                const ageInYears =
-                  ageDifferenceMs / (1000 * 60 * 60 * 24 * 365);
-                if (ageInYears < 18 || ageInYears > 80) {
-                  return Promise.reject('Age must be between 18 to 80 years.');
-                }
+        <div className="flex">
+          <Form.Item
+            name="role"
+            rules={[{ required: true, message: 'Please pick a role.' }]}
+          >
+            <Radio.Group className="flex">
+              <Radio value={'student'}>Student</Radio>
+              <Radio value={'teacher'}>Teacher</Radio>
+              <Radio value={'admin'}>Admin</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="birth_date"
+            rules={[
+              { required: true, message: 'Birth date is required.' },
+              {
+                validator: async (_, date, __) => {
+                  const birth_date = new Date(date);
+                  const now = new Date();
+                  const ageDifferenceMs = now - birth_date;
+                  const ageInYears =
+                    ageDifferenceMs / (1000 * 60 * 60 * 24 * 365);
+                  if (ageInYears < 18 || ageInYears > 80) {
+                    return Promise.reject(
+                      'Age must be between 18 to 80 years.'
+                    );
+                  }
+                },
               },
-            },
-          ]}
-        >
-          <DatePicker format={'YYYY-MM-DD'} />
-        </Form.Item>
+            ]}
+          >
+            <DatePicker format={'YYYY-MM-DD'} />
+          </Form.Item>
+        </div>
         <Form.Item
           label="Password"
           name="password"
