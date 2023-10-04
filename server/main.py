@@ -25,6 +25,7 @@ from db import session
 
 subscription = SubscriptionType()
 query = QueryType()
+
 mutate = ObjectType("Mutation")
 user = ObjectType("User")
 datetime_scalar = ScalarType("Datetime")
@@ -193,7 +194,14 @@ def resolve_add_enrollment(*_, enrollment):
 
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)
-middleware = [Middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["POST"])]
+middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["POST"],
+        allow_headers=["access-control-allow-origin", "authorization", "content-type"],
+    )
+]
 app = FastAPI(debug=True, middleware=middleware)
 
 
