@@ -16,7 +16,7 @@ export default function Login() {
       },
     });
     if (data.login) {
-      localStorage.setItem('login', JSON.stringify(data.login));
+      localStorage.setItem('token', data?.login?.token);
       navigate('/');
     }
   };
