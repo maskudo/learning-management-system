@@ -95,6 +95,10 @@ type_defs = gql(
         user(userId: Int!): User
         courses: [Course!]
         course(courseId: Int!): Course
+        categories: [Category!]
+        category(categoryId: Int!): Category
+        enrollments: [Enrollment!]
+        enrollment(enrollmentId: Int!): Enrollment
     }
 """
 )

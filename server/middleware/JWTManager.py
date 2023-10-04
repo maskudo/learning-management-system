@@ -3,7 +3,7 @@ from jose import jwt
 from typing import Optional
 
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 30
 SECRET_KEY = "learningmanagementsystem"
 ALGORITHM = "HS256"
 

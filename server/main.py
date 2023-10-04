@@ -115,6 +115,17 @@ def resolve_delete_category(*_, categoryId):
         return False
 
 
+@query.field("categories")
+def resolve_categories(*_):
+    return session.query(Category)
+
+
+@query.field("category")
+def resolve_category(*_, categoryId):
+    category = session.query(Category).where(Category.id == categoryId).one()
+    return category
+
+
 @query.field("courses")
 def resolve_courses(*_):
     return session.query(Course)
@@ -154,6 +165,17 @@ def resolve_delete_course(*_, courseId):
         return False
 
 
+@query.field("enrollments")
+def resolve_enrollments(*_):
+    return session.query(Enrollment)
+
+
+@query.field("enrollment")
+def resolve_enrollment(*_, enrollmentId):
+    enrollment = session.query(Enrollment).where(Enrollment.id == enrollmentId).one()
+    return enrollment
+
+
 @mutate.field("addEnrollment")
 def resolve_add_enrollment(*_, enrollment):
     try:
@@ -176,7 +198,7 @@ app = FastAPI(debug=True, middleware=middleware)
 
 
 def protect_route(resolver, obj, info: GraphQLResolveInfo, **args):
-    non_routed_mutations = ["register", "login"]
+    non_routed_mutations = ["IntrospectionQuery", "register", "login"]
     mutation_name = info.operation.name.value
     if mutation_name in non_routed_mutations:
         return resolver(obj, info, **args)
