@@ -93,6 +93,7 @@ type_defs = gql(
     type Query {
         users: [User!]
         user(userId: Int!): User
+        getUserByEmail(email: String!): User
         courses: [Course!]
         course(courseId: Int!): Course
         categories: [Category!]

@@ -17,6 +17,7 @@ export default function Login() {
     });
     if (data.login) {
       localStorage.setItem('token', data?.login?.token);
+      localStorage.setItem('email', data?.login?.email);
       navigate('/');
     }
   };

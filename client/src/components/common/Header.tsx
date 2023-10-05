@@ -1,7 +1,33 @@
 import { companyLogo } from '@/constants/images';
+import { GET_USER_BY_EMAIL } from '@/graphql/query';
+import { useQuery } from '@apollo/client';
 import { FaRegBell, FaRegUser } from 'react-icons/fa';
 import { NavLink, Link } from 'react-router-dom';
+const navItems = [
+  {
+    name: 'Dashboard',
+    to: 'dashboard',
+  },
+  {
+    name: 'All Courses',
+    to: 'courses',
+  },
+  {
+    name: 'My Courses',
+    to: 'mycourse',
+  },
+  {
+    name: 'Schedule',
+    to: 'schedule',
+  },
+];
 export default function Header() {
+  const email = localStorage.getItem('email');
+  useQuery(GET_USER_BY_EMAIL, {
+    variables: {
+      email: email,
+    },
+  });
   return (
     <header className="shadow px-20">
       <nav className="flex items-center gap-6 justify-between">
@@ -14,36 +40,24 @@ export default function Header() {
             />
           </div>
           <ul className="flex items-center gap-6">
-            <li>
-              <NavLink
-                to="/dashboard"
-                className={({ isActive, isPending }) =>
-                  isPending ? 'pending' : isActive ? 'active' : ''
-                }
-              >
-                Dashboard
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/courses"
-                className={({ isActive, isPending }) =>
-                  isPending ? 'pending' : isActive ? 'active' : ''
-                }
-              >
-                Courses
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/schedule"
-                className={({ isActive, isPending }) =>
-                  isPending ? 'pending' : isActive ? 'active' : ''
-                }
-              >
-                Schedule
-              </NavLink>
-            </li>
+            {navItems.map((item) => {
+              return (
+                <li>
+                  <NavLink
+                    to={item.to}
+                    className={({ isActive, isPending }) =>
+                      isPending
+                        ? 'pending'
+                        : isActive
+                        ? 'active underline underline-offset-8 decoration-blue-400 decoration-2'
+                        : ''
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <ul className="right flex gap-6 items-center">

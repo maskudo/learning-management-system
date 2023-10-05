@@ -56,6 +56,12 @@ def resolve_login_user(*_, email, password):
     return login_info
 
 
+@query.field("getUserByEmail")
+def resolve_get_user_by_email(*_, email):
+    user = session.query(User).where(User.email == email).one()
+    return user
+
+
 @query.field("user")
 def resolve_user(*_, userId):
     user = session.query(User).where(User.id == userId).one()
