@@ -62,3 +62,16 @@ export const GET_USERS = gql`
     }
   }
 `;
+
+export const GET_ENROLLMENTS_BY_COURSE = gql`
+  query getEnrollmentsByCourse($courseId: Int!) {
+    getEnrollmentsByCourse(courseId: $courseId) {
+      student {
+        name
+        role
+        id
+      }
+      id
+    }
+  }
+`;

@@ -8,6 +8,10 @@ type_defs = gql(
         student
         teacher
     }
+    type Error {
+        status: Int!
+        message: String!
+    }
 
     type User {
         id: Int!
@@ -16,6 +20,7 @@ type_defs = gql(
         birth_date: Datetime!
         phone_no: String!
         role: Role!
+        enrollments: [Enrollment]
     }
 
     type Category {
@@ -100,6 +105,7 @@ type_defs = gql(
         category(categoryId: Int!): Category
         enrollments: [Enrollment!]
         enrollment(enrollmentId: Int!): Enrollment
+        getEnrollmentsByCourse(courseId: Int!): [Enrollment]
     }
 """
 )

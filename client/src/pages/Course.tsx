@@ -31,7 +31,7 @@ export default function Course() {
               {
                 label: 'Participants',
                 key: '2',
-                children: <Participants />,
+                children: <Participants courseId={course.id} />,
                 // disabled: getUserByEmail.role === 'student',
               },
               {

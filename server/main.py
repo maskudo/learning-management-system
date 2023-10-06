@@ -183,6 +183,12 @@ def resolve_enrollment(*_, enrollmentId):
     return enrollment
 
 
+@query.field("getEnrollmentsByCourse")
+def resolve_get_enrollments_by_courset(*_, courseId):
+    enrollments = session.query(Enrollment).where(Enrollment.course_id == courseId)
+    return enrollments
+
+
 @mutate.field("addEnrollment")
 def resolve_add_enrollment(*_, enrollment):
     enrollmentCheck = (

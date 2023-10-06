@@ -1,4 +1,4 @@
-import { GET_USERS } from '@/graphql/query';
+import { GET_ENROLLMENTS_BY_COURSE, GET_USERS } from '@/graphql/query';
 import { useQuery } from '@apollo/client';
 import { Table } from 'antd';
 
@@ -14,9 +14,17 @@ const columns = [
   },
 ];
 
-export default function Participants() {
-  const { data, error, loading } = useQuery(GET_USERS);
-  const users = data?.users.map((user) => ({ ...user, key: user.id }));
+export default function Participants({ courseId }) {
+  const { data, error, loading } = useQuery(GET_ENROLLMENTS_BY_COURSE, {
+    variables: {
+      courseId,
+    },
+  });
+
+  const users = data?.getEnrollmentsByCourse?.map((res) => ({
+    ...res.student,
+    key: res.id,
+  }));
   return (
     <div className="participants">
       {loading && <div>Loading... </div>}
