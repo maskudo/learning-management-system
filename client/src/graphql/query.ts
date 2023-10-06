@@ -43,6 +43,12 @@ export const GET_USER_BY_EMAIL = gql`
       name
       id
       role
+      enrollments {
+        id
+        course {
+          id
+        }
+      }
     }
   }
 `;

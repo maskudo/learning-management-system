@@ -12,11 +12,15 @@ export const LOGIN = gql`
 export const REGISTER = gql`
   mutation register($user: AddUserInput!) {
     register(user: $user) {
-      name
-      email
-      birth_date
-      phone_no
-      role
+      id
+    }
+  }
+`;
+
+export const ADD_ENROLLMENT = gql`
+  mutation addEnrollment($enrollment: AddEnrollmentInput!) {
+    addEnrollment(enrollment: $enrollment) {
+      id
     }
   }
 `;

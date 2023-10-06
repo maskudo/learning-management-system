@@ -4,8 +4,16 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Courses from './pages/Courses';
 import Course from './pages/Course';
+import { GET_USER_BY_EMAIL } from './graphql/query';
+import { useQuery } from '@apollo/client';
 
 function App() {
+  const email = localStorage.getItem('email');
+  useQuery(GET_USER_BY_EMAIL, {
+    variables: {
+      email: email,
+    },
+  });
   return (
     <BrowserRouter>
       <Routes>

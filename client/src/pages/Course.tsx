@@ -1,6 +1,6 @@
 import { About, Grades, Participants, Teachers } from '@/components/course';
-import { GET_COURSE_BY_ID, GET_USER_BY_EMAIL } from '@/graphql/query';
-import { useApolloClient, useQuery } from '@apollo/client';
+import { GET_COURSE_BY_ID } from '@/graphql/query';
+import { useQuery } from '@apollo/client';
 import { Tabs } from 'antd';
 import { useParams } from 'react-router-dom';
 
@@ -11,14 +11,6 @@ export default function Course() {
       id: parseInt(id ?? ''),
     },
   });
-  const email = localStorage.getItem('email');
-  const client = useApolloClient();
-  const getUserByEmail = client.readQuery({
-    query: GET_USER_BY_EMAIL,
-    variables: {
-      email,
-    },
-  })?.getUserByEmail;
 
   const course = data?.course;
   return (

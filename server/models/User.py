@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from sqlalchemy import Column, Enum, Integer, String, Date
+from sqlalchemy.orm import relationship
 from utils.hash import hash_password
 from models import Base
 
@@ -17,6 +18,7 @@ class User(Base):
         Enum("admin", "teacher", "student", name="role_enum", create_type=False),
         nullable=False,
     )
+    enrollments = relationship("Enrollment", cascade="delete, merge, save-update")
 
     def __init__(
         self,

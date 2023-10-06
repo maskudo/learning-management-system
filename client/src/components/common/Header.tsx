@@ -1,6 +1,4 @@
 import { companyLogo } from '@/constants/images';
-import { GET_USER_BY_EMAIL } from '@/graphql/query';
-import { useQuery } from '@apollo/client';
 import { FaRegBell, FaRegUser } from 'react-icons/fa';
 import { NavLink, Link } from 'react-router-dom';
 const navItems = [
@@ -22,12 +20,6 @@ const navItems = [
   },
 ];
 export default function Header() {
-  const email = localStorage.getItem('email');
-  useQuery(GET_USER_BY_EMAIL, {
-    variables: {
-      email: email,
-    },
-  });
   return (
     <header className="shadow px-20">
       <nav className="flex items-center gap-6 justify-between">
