@@ -28,6 +28,7 @@ export const GET_COURSE_BY_ID = gql`
       name
       id
       description
+      abstract
       category {
         name
         id
@@ -39,6 +40,16 @@ export const GET_COURSE_BY_ID = gql`
 export const GET_USER_BY_EMAIL = gql`
   query getUserByEmail($email: String!) {
     getUserByEmail(email: $email) {
+      name
+      id
+      role
+    }
+  }
+`;
+
+export const GET_USERS = gql`
+  query getUsers {
+    users {
       name
       id
       role

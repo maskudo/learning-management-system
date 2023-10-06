@@ -42,7 +42,7 @@ export default function Header() {
           <ul className="flex items-center gap-6">
             {navItems.map((item) => {
               return (
-                <li>
+                <li key={item.to}>
                   <NavLink
                     to={item.to}
                     className={({ isActive, isPending }) =>
