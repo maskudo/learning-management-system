@@ -7,12 +7,8 @@ const navItems = [
     to: 'dashboard',
   },
   {
-    name: 'All Courses',
+    name: 'Courses',
     to: 'courses',
-  },
-  {
-    name: 'My Courses',
-    to: 'mycourse',
   },
   {
     name: 'Schedule',
