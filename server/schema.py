@@ -47,6 +47,12 @@ type_defs = gql(
         cancelled: Boolean
         cancellation_reason: String
     }
+    
+    type CourseTeacher{
+        id: Int!
+        teacher: User!
+        course: Course!
+    }
 
     input AddEnrollmentInput{
         student_id: Int!
@@ -93,6 +99,7 @@ type_defs = gql(
         deleteCourse(courseId: Int!): Boolean
         addEnrollment(enrollment: AddEnrollmentInput!): Enrollment
         updateEnrollment(enrollment: UpdateEnrollmentInput!): Enrollment
+        addCourseTeacher(courseId: Int!, teacherId: Int!): CourseTeacher
     }
 
     type Query {
@@ -106,6 +113,7 @@ type_defs = gql(
         enrollments: [Enrollment!]
         enrollment(enrollmentId: Int!): Enrollment
         getEnrollmentsByCourse(courseId: Int!): [Enrollment]
+        getTeachersByCourse(courseId: Int!): [CourseTeacher]
     }
 """
 )

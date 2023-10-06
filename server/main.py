@@ -6,6 +6,7 @@ from middleware.JWTManager import JWTManager
 from starlette.middleware.cors import CORSMiddleware
 from models.Category import Category
 from models.Course import Course
+from models.CourseTeacher import CourseTeacher
 from models.Enrollment import Enrollment
 from models.User import User
 from ariadne import (
@@ -208,6 +209,33 @@ def resolve_add_enrollment(*_, enrollment):
     session.add(enrollmentObj)
     session.commit()
     return enrollmentObj
+
+
+@mutate.field("addCourseTeacher")
+def resolve_add_course_teacher(*_, courseId, teacherId):
+    print("here")
+    courseTeacherCheck = (
+        session.query(CourseTeacher)
+        .where(CourseTeacher.teacher_id == teacherId)
+        .where(CourseTeacher.course_id == courseId)
+        .first()
+    )
+    print("2here")
+    if courseTeacherCheck:
+        raise HttpBadRequestError("Teacher already assigned to the course.")
+
+    courseTeacherObj = CourseTeacher(courseId, teacherId)
+    session.add(courseTeacherObj)
+    session.commit()
+    return courseTeacherObj
+
+
+@query.field("getTeachersByCourse")
+def resolve_get_teachers_by_courset(*_, courseId):
+    courseTeachers = session.query(CourseTeacher).where(
+        CourseTeacher.course_id == courseId
+    )
+    return courseTeachers
 
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)

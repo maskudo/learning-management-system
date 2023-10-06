@@ -37,7 +37,7 @@ export default function Course() {
               {
                 label: 'Teachers',
                 key: '3',
-                children: <Teachers />,
+                children: <Teachers courseId={course.id} />,
               },
               {
                 label: 'Grades',

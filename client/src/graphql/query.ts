@@ -75,3 +75,15 @@ export const GET_ENROLLMENTS_BY_COURSE = gql`
     }
   }
 `;
+
+export const GET_TEACHERS_BY_COURSE = gql`
+  query getTeachersByCourse($courseId: Int!) {
+    getTeachersByCourse(courseId: $courseId) {
+      teacher {
+        name
+        role
+        id
+      }
+    }
+  }
+`;
