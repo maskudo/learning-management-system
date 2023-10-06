@@ -185,18 +185,23 @@ def resolve_enrollment(*_, enrollmentId):
 
 @mutate.field("addEnrollment")
 def resolve_add_enrollment(*_, enrollment):
-    try:
-        enrollmentObj = Enrollment(
-            enrollment["student_id"],
-            enrollment["course_id"],
-            enrollment.get("cancelled", False),
-            enrollment.get("cancellation_reason", None),
-        )
-        session.add(enrollmentObj)
-        session.commit()
-        return enrollmentObj
-    except Exception:
-        return None
+    enrollmentCheck = (
+        session.query(Enrollment)
+        .where(Enrollment.student_id == enrollment["student_id"])
+        .where(Enrollment.course_id == enrollment["course_id"])
+        .first()
+    )
+    if enrollmentCheck and not enrollmentCheck.cancelled:
+        raise HttpBadRequestError("User already enrolled into the course.")
+    enrollmentObj = Enrollment(
+        enrollment["student_id"],
+        enrollment["course_id"],
+        enrollment.get("cancelled", False),
+        enrollment.get("cancellation_reason", None),
+    )
+    session.add(enrollmentObj)
+    session.commit()
+    return enrollmentObj
 
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)

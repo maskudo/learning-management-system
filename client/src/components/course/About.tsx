@@ -2,6 +2,7 @@ import { ADD_ENROLLMENT } from '@/graphql/mutations';
 import { GET_USER_BY_EMAIL } from '@/graphql/query';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { Button, message } from 'antd';
+import { useState } from 'react';
 
 export default function About({ info }) {
   const [addEnrollment] = useMutation(ADD_ENROLLMENT);
@@ -25,14 +26,15 @@ export default function About({ info }) {
       });
       if (data?.addEnrollment?.id) {
         message.success('Successfully Enrolled into the course!');
+        setDisableButton(true);
       }
     } catch (e) {
       message.error(e.message);
     }
   };
-  const disableEnrollment = user?.enrollments?.indexOf(
-    (enrollment) => enrollment?.course?.id === info.id
-  );
+
+  const ids = user?.enrollments?.map((e) => e?.course?.id);
+  const [disableButton, setDisableButton] = useState(ids?.includes(info.id));
   return (
     <div className="info flex flex-col gap-4 ">
       <div className="description">
@@ -49,7 +51,7 @@ export default function About({ info }) {
           className="bg-blue-600 hover:bg-blue-200  w-full"
           size="large"
           onClick={handleEnrollment}
-          disabled={disableEnrollment}
+          disabled={disableButton}
         >
           Enroll
         </Button>
