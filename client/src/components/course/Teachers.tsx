@@ -22,8 +22,10 @@ export default function Teachers({ courseId }) {
   });
 
   const users =
-    data?.getTeachersByCourse.map((res) => ({ ...res?.teacher })) ?? [];
-  console.log(users);
+    data?.getTeachersByCourse.map((res) => ({
+      ...res?.teacher,
+      key: res?.teacher.id,
+    })) ?? [];
   return (
     <div className="participants">
       {loading && <div>Loading... </div>}

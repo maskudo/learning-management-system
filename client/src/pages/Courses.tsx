@@ -23,7 +23,7 @@ export default function Courses() {
 
   return (
     <>
-      {!!error && <div>Error fetching data </div>}
+      {!!error && <div>Error fetching data. Try again later. </div>}
       {!!loading && <div>Loading...</div>}
       {!error && !loading && (
         <div className="courses-container">

@@ -18,7 +18,10 @@ class User(Base):
         Enum("admin", "teacher", "student", name="role_enum", create_type=False),
         nullable=False,
     )
-    enrollments = relationship("Enrollment", cascade="delete, merge, save-update")
+    enrollments = relationship(
+        "Enrollment", cascade="delete, merge, save-update", back_populates="student"
+    )
+    teaching = relationship("CourseTeacher")
 
     def __init__(
         self,

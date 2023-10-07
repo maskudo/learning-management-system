@@ -20,7 +20,8 @@ type_defs = gql(
         birth_date: Datetime!
         phone_no: String!
         role: Role!
-        enrollments: [Enrollment]
+        enrollments: [Enrollment!]
+        teaching: [CourseTeacher!]
     }
 
     type Category {
@@ -48,10 +49,39 @@ type_defs = gql(
         cancellation_reason: String
     }
     
-    type CourseTeacher{
+    type CourseTeacher {
         id: Int!
         teacher: User!
         course: Course!
+    }
+
+    type Class {
+        id: Int!
+        title: String!
+        start_time: Datetime!
+        end_time: Datetime!
+        teacher: User!
+        course: Course!
+        cancelled: Boolean
+        cancellation_reason: String
+    }
+
+    input AddClassInput {
+        title: String!
+        start_time: Datetime!
+        end_time: Datetime!
+        teacher_id: Int!
+        course_id: Int!
+        cancelled: Boolean
+        cancellation_reason: String
+    }
+
+    input UpdateClassInput {
+        title: String
+        start_time: Datetime
+        end_time: Datetime
+        cancelled: Boolean
+        cancellation_reason: String
     }
 
     input AddEnrollmentInput{
@@ -100,6 +130,8 @@ type_defs = gql(
         addEnrollment(enrollment: AddEnrollmentInput!): Enrollment
         updateEnrollment(enrollment: UpdateEnrollmentInput!): Enrollment
         addCourseTeacher(courseId: Int!, teacherId: Int!): CourseTeacher
+        addClass(classInfo: AddClassInput!): Class
+        updateClass(classInfo: UpdateClassInput!): Class
     }
 
     type Query {
@@ -114,6 +146,8 @@ type_defs = gql(
         enrollment(enrollmentId: Int!): Enrollment
         getEnrollmentsByCourse(courseId: Int!): [Enrollment]
         getTeachersByCourse(courseId: Int!): [CourseTeacher]
+        getClassesByCourse(courseId: Int!): [Class]
+        getClassesByTeacher(teacherId: Int!): [Class]
     }
 """
 )

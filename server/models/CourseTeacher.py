@@ -11,7 +11,9 @@ class CourseTeacher(Base):
     course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
     teacher_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     course = relationship("Course", cascade="delete, merge, save-update")
-    teacher = relationship("User", cascade="delete, merge, save-update")
+    teacher = relationship(
+        "User", cascade="delete, merge, save-update", back_populates="teaching"
+    )
     __table_args__ = (
         UniqueConstraint("teacher_id", "course_id", name="uq_course_teacher_pair"),
     )

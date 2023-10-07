@@ -4,6 +4,7 @@ from graphql.type import GraphQLResolveInfo
 from starlette.middleware import Middleware
 from middleware.JWTManager import JWTManager
 from starlette.middleware.cors import CORSMiddleware
+from models.Class import Class
 from models.Category import Category
 from models.Course import Course
 from models.CourseTeacher import CourseTeacher
@@ -50,7 +51,7 @@ def resolve_login_user(*_, email, password):
         return None
 
     hashed_password = hash_password(password)
-    if hashed_password != existing_user.password.__str__():
+    if hashed_password != existing_user.password:
         return None
     token = JWTManager.generate_token({"sub": email})
     login_info = {"email": email, "token": token}
@@ -213,14 +214,12 @@ def resolve_add_enrollment(*_, enrollment):
 
 @mutate.field("addCourseTeacher")
 def resolve_add_course_teacher(*_, courseId, teacherId):
-    print("here")
     courseTeacherCheck = (
         session.query(CourseTeacher)
         .where(CourseTeacher.teacher_id == teacherId)
         .where(CourseTeacher.course_id == courseId)
         .first()
     )
-    print("2here")
     if courseTeacherCheck:
         raise HttpBadRequestError("Teacher already assigned to the course.")
 
@@ -236,6 +235,23 @@ def resolve_get_teachers_by_courset(*_, courseId):
         CourseTeacher.course_id == courseId
     )
     return courseTeachers
+
+
+@mutate.field("addClass")
+def resolve_add_class(*_, classInfo):
+    print(classInfo)
+    classObj = Class(
+        classInfo["title"],
+        classInfo["course_id"],
+        classInfo["teacher_id"],
+        classInfo["start_time"],
+        classInfo["end_time"],
+        classInfo.get("cencelled"),
+        classInfo.get("cancellation_reason"),
+    )
+    session.add(classObj)
+    session.commit()
+    return classObj
 
 
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)
