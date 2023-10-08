@@ -254,6 +254,12 @@ def resolve_add_class(*_, classInfo):
     return classObj
 
 
+@query.field("getClassesByCourse")
+def resolve_get_classes_by_course(*_, courseId):
+    classes = session.query(Class).where(Class.course_id == courseId)
+    return classes
+
+
 schema = make_executable_schema(type_defs, query, mutate, user, datetime_scalar)
 middleware = [
     Middleware(

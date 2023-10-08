@@ -93,3 +93,16 @@ export const GET_TEACHERS_BY_COURSE = gql`
     }
   }
 `;
+
+export const GET_CLASSES_BY_COURSE = gql`
+  query getClassesByCourse($courseId: Int!) {
+    getClassesByCourse(courseId: $courseId) {
+      teacher {
+        name
+      }
+      start_time
+      end_time
+      title
+    }
+  }
+`;

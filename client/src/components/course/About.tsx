@@ -2,7 +2,6 @@ import { ADD_ENROLLMENT } from '@/graphql/mutations';
 import { GET_USER_BY_EMAIL } from '@/graphql/query';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { Button, message } from 'antd';
-import { CreateClass } from '.';
 
 export default function About({ info }) {
   const [addEnrollment] = useMutation(ADD_ENROLLMENT);

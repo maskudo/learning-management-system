@@ -14,6 +14,7 @@ class Class(Base):
     cancelled = Column(Boolean, default=False)
     cancellation_reason = Column(String)
     course = relationship("Course", cascade="delete, merge, save-update")
+    teacher = relationship("User", cascade="delete, merge, save-update")
 
     def __init__(
         self,
