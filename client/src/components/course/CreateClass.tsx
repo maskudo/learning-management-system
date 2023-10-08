@@ -1,7 +1,10 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Button, DatePicker, Form, Space } from 'antd';
+import { Button, DatePicker, Form, Input, Space, message } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
+import { useRef } from 'react';
+import { ADD_CLASS } from '@/graphql/mutations';
+import { useMutation } from '@apollo/client';
 
 dayjs.extend(customParseFormat);
 
@@ -21,12 +24,6 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return current && current < dayjs().endOf('day');
 };
 
-const disabledDateTime = () => ({
-  disabledHours: () => range(0, 24).splice(4, 20),
-  disabledMinutes: () => range(30, 60),
-  disabledSeconds: () => [55, 56],
-});
-
 const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
   if (type === 'start') {
     return {
@@ -42,18 +39,58 @@ const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
   };
 };
 
-export default function CreateClass() {
-  const handleSubmit = (values) => {
-    console.log('startime', values.datetime[0].toISOString());
-    console.log('endTime', values.datetime[1].toISOString());
+export default function CreateClass({ courseId, teacherId }) {
+  const ref = useRef(null);
+  const [addClass] = useMutation(ADD_CLASS);
+
+  const handleSubmit = async (values) => {
+    if (!values.datetime) {
+      ref?.current?.focus();
+      return;
+    }
+    const start_time = values.datetime[0].toISOString();
+    const end_time = values.datetime[1].toISOString();
+    const title = values.title;
+    try {
+      const { errors } = await addClass({
+        variables: {
+          classInfo: {
+            title,
+            start_time,
+            end_time,
+            course_id: courseId,
+            teacher_id: teacherId,
+          },
+        },
+      });
+      if (errors) {
+        throw new Error('Error creating class');
+      } else {
+        message.success('Course created successfully!');
+      }
+    } catch (e) {
+      message.error(
+        'An error occured while creating class. Please try again later.'
+      );
+    }
   };
   return (
     <Space direction="vertical" size={12}>
+      <h3 className="text-2xl">Create Class</h3>
       <Form className=" m-auto" layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="datetime" name="datetime">
+        <Form.Item label="Class Title" name="title" required={true}>
+          <Input required />
+        </Form.Item>
+        <Form.Item
+          label="Start Time - End Time"
+          name="datetime"
+          required={true}
+        >
           <RangePicker
+            className="w-full"
             disabledDate={disabledDate}
             disabledTime={disabledRangeTime}
+            ref={ref}
             showTime={{
               hideDisabledOptions: true,
               defaultValue: [

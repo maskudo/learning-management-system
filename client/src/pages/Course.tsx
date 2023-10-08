@@ -1,4 +1,11 @@
-import { About, Grades, Participants, Teachers } from '@/components/course';
+import {
+  About,
+  Classes,
+  Grades,
+  Participants,
+  Teachers,
+  Tests,
+} from '@/components/course';
 import { GET_COURSE_BY_ID } from '@/graphql/query';
 import { useQuery } from '@apollo/client';
 import { Tabs } from 'antd';
@@ -29,6 +36,12 @@ export default function Course() {
                 children: <About info={course} />,
               },
               {
+                label: 'Classes',
+                key: '6',
+                children: <Classes courseInfo={course} />,
+                // disabled: getUserByEmail.role === 'student',
+              },
+              {
                 label: 'Participants',
                 key: '2',
                 children: <Participants courseId={course.id} />,
@@ -40,8 +53,14 @@ export default function Course() {
                 children: <Teachers courseId={course.id} />,
               },
               {
-                label: 'Grades',
+                label: 'Tests',
                 key: '4',
+                children: <Tests />,
+                // disabled: getUserByEmail.role === 'student',
+              },
+              {
+                label: 'Grades',
+                key: '5',
                 children: <Grades />,
                 // disabled: getUserByEmail.role === 'student',
               },

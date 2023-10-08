@@ -24,3 +24,12 @@ export const ADD_ENROLLMENT = gql`
     }
   }
 `;
+export const ADD_CLASS = gql`
+  mutation addClass($classInfo: AddClassInput!) {
+    addClass(classInfo: $classInfo) {
+      title
+      end_time
+      start_time
+    }
+  }
+`;

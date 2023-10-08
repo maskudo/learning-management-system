@@ -66,7 +66,6 @@ export default function About({ info }) {
           </Button>
         </div>
       )}
-      {isTeachingThisCourse && <CreateClass />}
     </div>
   );
 }
