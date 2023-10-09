@@ -20,7 +20,9 @@ from mygraphql.resolvers.course import courseMutate, courseQuery
 from mygraphql.resolvers.enrollment import enrollmentQuery, enrollmentMutate
 from mygraphql.resolvers.course_teacher import courseTeacherQuery, courseTeacherMutate
 from mygraphql.resolvers.classes import classQuery, classMutate
-
+from mygraphql.resolvers.assignment import assignmentQuery, assignmentMutate
+from mygraphql.resolvers.question import questionQuery, questionMutate
+from mygraphql.resolvers.submission import submissionQuery, submissionMutate
 
 datetime_scalar = ScalarType("Datetime")
 
@@ -46,6 +48,12 @@ schema = make_executable_schema(
     courseTeacherMutate,
     classQuery,
     classMutate,
+    assignmentQuery,
+    assignmentMutate,
+    questionQuery,
+    questionMutate,
+    submissionQuery,
+    submissionMutate,
 )
 middleware = [
     Middleware(

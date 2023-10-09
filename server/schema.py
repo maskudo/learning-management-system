@@ -8,6 +8,10 @@ type_defs = gql(
         student
         teacher
     }
+    enum QuestionType {
+        multiple_choice
+        essay
+    }
     type Error {
         status: Int!
         message: String!
@@ -66,6 +70,42 @@ type_defs = gql(
         cancellation_reason: String
     }
 
+    type Assignment {
+        id: Int!
+        name: String!
+        course: Course!
+        deadline: Datetime!
+    }
+
+    type Question {
+        id: Int!
+        assignment: Assignment!
+        question_text:String!
+        question_type: QuestionType!
+    }
+    
+    type QuestionOption {
+        id: Int!
+        question: Question! 
+        option_text: String!
+        is_correct: Boolean!
+    }
+
+    type Submission {
+        id: Int!
+        assignment: Assignment!
+        question: Question!
+        student: User!
+        submission_text: String
+        score: Int
+    }
+
+    type SubmittedOption {
+        id: Int!
+        submission: Submission
+        option: QuestionOption
+    }
+
     input AddClassInput {
         title: String!
         start_time: Datetime!
@@ -118,6 +158,36 @@ type_defs = gql(
         email: String!
         token: String!
     }
+
+    input AddAssignmentInput{
+        name: String!
+        deadline: Datetime!
+        course_id: Int!
+    }
+    input AddQuestionInput{
+        assignment_id: Int!
+        question_text: String!
+        question_type: QuestionType!
+        
+    }
+    input AddQuestionOptionInput{
+        question_id: Int!
+        option_text: String!
+        is_correct: Boolean!
+
+    }
+    input AddSubmissionInput{
+        assignment_id: Int!
+        question_id: Int!
+        student_id: Int!
+        submission_text: String
+        score: Int
+
+    }
+    input AddSubmittedOptionInput{
+        submission_id: Int!
+        option_id: Int!
+    }
     
     type Mutation {
         register(user: AddUserInput!): User 
@@ -132,6 +202,11 @@ type_defs = gql(
         addCourseTeacher(courseId: Int!, teacherId: Int!): CourseTeacher
         addClass(classInfo: AddClassInput!): Class
         updateClass(classInfo: UpdateClassInput!): Class
+        addAssignment(assignmentInfo: AddAssignmentInput!): Assignment
+        addQuestion(questionInfo: AddQuestionInput!): Question
+        addQuestionOption(questionOptionInfo: AddQuestionOptionInput!): QuestionOption
+        addSubmission(submissionInfo: AddSubmissionInput!): Submission
+        addSubmittedOption(submittedOptionInfo: AddSubmittedOptionInput!): SubmittedOption
     }
 
     type Query {
@@ -148,6 +223,11 @@ type_defs = gql(
         getTeachersByCourse(courseId: Int!): [CourseTeacher]
         getClassesByCourse(courseId: Int!): [Class]
         getClassesByTeacher(teacherId: Int!): [Class]
+        getAssignment(assignmentId: Int!): Assignment
+        getQuestion(questionId: Int!): Question
+        getQuestionOption(questionOptionId: Int!): QuestionOption
+        getSubmission(submissionId: Int!): Submission
+        getSubmittedOption(submittedOptionId: Int!): SubmittedOption
     }
 """
 )
