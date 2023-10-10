@@ -6,6 +6,7 @@ import Courses from './pages/Courses';
 import Course from './pages/Course';
 import { GET_USER_BY_EMAIL } from './graphql/query';
 import { useQuery } from '@apollo/client';
+import Assignment from './pages/Assignment';
 
 function App() {
   const email = localStorage.getItem('email');
@@ -20,7 +21,11 @@ function App() {
         <Route path="/" element={<Home />}>
           <Route path="dashboard"></Route>
           <Route path="courses" element={<Courses />} />
-          <Route path="courses/:id" element={<Course />} />
+          <Route path="courses/:id" element={<Course />}></Route>
+          <Route
+            path="courses/:id/assignment/:assignment"
+            element={<Assignment />}
+          />
           <Route path="schedule"></Route>
           <Route path="profile"></Route>
         </Route>

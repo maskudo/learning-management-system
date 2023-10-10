@@ -106,3 +106,31 @@ export const GET_CLASSES_BY_COURSE = gql`
     }
   }
 `;
+
+export const GET_ASSIGNMENTS_BY_COURSE = gql`
+  query getAssignmentByCourse($courseId: Int!) {
+    getAssignmentsByCourse(courseId: $courseId) {
+      name
+      deadline
+      id
+    }
+  }
+`;
+
+export const GET_ASSIGNMENT = gql`
+  query getAssignment($assignmentId: Int!) {
+    getAssignment(assignmentId: $assignmentId) {
+      id
+      name
+      questions {
+        id
+        question_text
+        question_type
+        question_options {
+          id
+          option_text
+        }
+      }
+    }
+  }
+`;

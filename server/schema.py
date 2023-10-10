@@ -75,18 +75,18 @@ type_defs = gql(
         name: String!
         course: Course!
         deadline: Datetime!
+        questions: [Question!]
     }
 
     type Question {
         id: Int!
-        assignment: Assignment!
         question_text:String!
         question_type: QuestionType!
+        question_options: [QuestionOption!]
     }
     
     type QuestionOption {
         id: Int!
-        question: Question! 
         option_text: String!
         is_correct: Boolean!
     }
@@ -224,7 +224,9 @@ type_defs = gql(
         getClassesByCourse(courseId: Int!): [Class]
         getClassesByTeacher(teacherId: Int!): [Class]
         getAssignment(assignmentId: Int!): Assignment
+        getAssignmentsByCourse(courseId: Int!): [Assignment!]
         getQuestion(questionId: Int!): Question
+        getQuestionsByAssignment(assignmentId: Int!): [Question!]
         getQuestionOption(questionOptionId: Int!): QuestionOption
         getSubmission(submissionId: Int!): Submission
         getSubmittedOption(submittedOptionId: Int!): SubmittedOption

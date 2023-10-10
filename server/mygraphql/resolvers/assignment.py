@@ -36,3 +36,9 @@ def resolve_add_assignment(*_, assignmentInfo):
 def resolve_assignment(*_, assignmentId):
     assignment = session.query(Assignment).where(Assignment.id == assignmentId).first()
     return assignment
+
+
+@assignmentQuery.field("getAssignmentsByCourse")
+def resolve_assignments_by_course(*_, courseId):
+    assignment = session.query(Assignment).where(Assignment.course_id == courseId)
+    return assignment

@@ -4,7 +4,7 @@ import {
   Grades,
   Participants,
   Teachers,
-  Tests,
+  Assignments,
 } from '@/components/course';
 import { GET_COURSE_BY_ID } from '@/graphql/query';
 import { useQuery } from '@apollo/client';
@@ -53,9 +53,9 @@ export default function Course() {
                 children: <Teachers courseId={course.id} />,
               },
               {
-                label: 'Tests',
+                label: 'Assignments',
                 key: '4',
-                children: <Tests />,
+                children: <Assignments courseId={course.id} />,
                 // disabled: getUserByEmail.role === 'student',
               },
               {

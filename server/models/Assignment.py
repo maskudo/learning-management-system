@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -9,6 +10,7 @@ class Assignment(Base):
     name = Column(String, nullable=False)
     course_id = Column(Integer, ForeignKey("courses.id"))
     deadline = Column(DateTime, nullable=False)
+    questions = relationship("Question", passive_deletes=True)
 
     def __init__(self, name: str, course_id: int, deadline: datetime) -> None:
         self.name = name

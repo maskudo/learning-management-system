@@ -23,9 +23,6 @@ engine = create_engine(DATABASE_URI)
 if not database_exists(engine.url):
     create_database(engine.url)
 
-# Base.metadata.reflect(engine, extend_existing=True)
-# insp = reflection.Inspector.from_engine(engine)
-# print(insp.get_table_names())
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)

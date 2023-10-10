@@ -1,4 +1,5 @@
 from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -11,6 +12,7 @@ class Question(Base):
         Enum("multiple_choice", "essay", name="question_type_enum", create_type=False),
         nullable=False,
     )
+    question_options = relationship("QuestionOption", passive_deletes=True)
 
     def __init__(self, assignment_id: int, question_text: str, question_type: str):
         self.assignment_id = assignment_id
@@ -18,7 +20,9 @@ class Question(Base):
         self.question_type = question_type
 
     def __repr__(self) -> str:
-        return f"Question(text='{self.question_text}')"
+        return (
+            f"Question(text='{self.question_text}', options='{self.question_options}')"
+        )
 
 
 class QuestionOption(Base):

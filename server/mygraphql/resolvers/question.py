@@ -35,7 +35,14 @@ def resolve_add_question(*_, questionInfo):
 @questionQuery.field("getQuestion")
 def resolve_question(*_, questionId):
     question = session.query(Question).where(Question.id == questionId).first()
+    print(question)
     return question
+
+
+@questionQuery.field("getQuestionsByAssignment")
+def resolve_question_by_assignment(*_, assignmentId):
+    questions = session.query(Question).where(Question.assignment_id == assignmentId)
+    return questions
 
 
 @questionMutate.field("addQuestionOption")
