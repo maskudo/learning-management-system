@@ -1,5 +1,6 @@
 from typing import Optional
 from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -11,6 +12,7 @@ class Submission(Base):
     student_id = Column(Integer, ForeignKey("users.id"))
     submission_text = Column(String, nullable=True)
     score = Column(Integer, nullable=True)
+    submitted_option = relationship("SubmittedOption")
 
     def __init__(
         self,
@@ -27,7 +29,7 @@ class Submission(Base):
         self.score = score
 
     def __repr__(self) -> str:
-        return f"Submission(student_id='{self.student_id}', assignment_id='{self.assignment_id}')"
+        return f"Submission(student_id='{self.student_id}', assignment_id='{self.assignment_id}', submission_text='{self.submission_text}')"
 
 
 class SubmittedOption(Base):
@@ -41,4 +43,4 @@ class SubmittedOption(Base):
         self.option_id = option_id
 
     def __repr__(self) -> str:
-        return f"SubmittedOption(submission_id='{self.submission_id}', option_id='{self.option_id}')"
+        return f"SubmittedOption(id='{self.id}', submission_id='{self.submission_id}', option_id='{self.option_id}')"

@@ -98,6 +98,7 @@ type_defs = gql(
         student: User!
         submission_text: String
         score: Int
+        submission_option: SubmittedOption
     }
 
     type SubmittedOption {
@@ -188,6 +189,20 @@ type_defs = gql(
         submission_id: Int!
         option_id: Int!
     }
+
+    input QuestionAnswerInput {
+        question: Int!
+        answer: Solution
+    }
+    input Solution {
+        submission_text: String
+        submitted_option: Int
+    }
+    input SubmittedAssignment{
+        assignment_id: Int!
+        student_id: Int!
+        solutions : [QuestionAnswerInput]
+    }
     
     type Mutation {
         register(user: AddUserInput!): User 
@@ -207,6 +222,7 @@ type_defs = gql(
         addQuestionOption(questionOptionInfo: AddQuestionOptionInput!): QuestionOption
         addSubmission(submissionInfo: AddSubmissionInput!): Submission
         addSubmittedOption(submittedOptionInfo: AddSubmittedOptionInput!): SubmittedOption
+        submitAssignment(submittedAssignment: SubmittedAssignment!): Boolean
     }
 
     type Query {

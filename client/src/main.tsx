@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './index.css';
 import App from './App.tsx';
 import {
   ApolloClient,
@@ -8,6 +9,7 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import UserContextProvider from './context/userContext.tsx';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8000/graphql',
@@ -29,8 +31,9 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <UserContextProvider>
+        <App />
+      </UserContextProvider>
     </ApolloProvider>
   </React.StrictMode>
 );
-import './index.css';

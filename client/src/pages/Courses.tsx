@@ -1,19 +1,13 @@
 import CourseCard from '@/components/common/CourseCard';
-import { GET_COURSES, GET_USER_BY_EMAIL } from '@/graphql/query';
-import { useApolloClient, useQuery } from '@apollo/client';
+import { useUserContext } from '@/context/userContext';
+import { GET_COURSES } from '@/graphql/query';
+import { useQuery } from '@apollo/client';
 import { Tabs } from 'antd';
 
 export default function Courses() {
   const { loading, error, data } = useQuery(GET_COURSES);
   const courses = data?.courses;
-  const client = useApolloClient();
-  const email = localStorage.getItem('email');
-  const user = client.readQuery({
-    query: GET_USER_BY_EMAIL,
-    variables: {
-      email,
-    },
-  })?.getUserByEmail;
+  const { user } = useUserContext();
   const myCoursesId = user?.enrollments.map(
     (enrollment) => enrollment.course.id
   );

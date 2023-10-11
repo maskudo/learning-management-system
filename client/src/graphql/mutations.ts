@@ -33,3 +33,9 @@ export const ADD_CLASS = gql`
     }
   }
 `;
+
+export const SUBMIT_ASSIGNMENT = gql`
+  mutation submitAssignment($submittedAssignment: SubmittedAssignment!) {
+    submitAssignment(submittedAssignment: $submittedAssignment)
+  }
+`;

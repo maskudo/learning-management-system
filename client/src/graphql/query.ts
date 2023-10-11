@@ -103,6 +103,7 @@ export const GET_CLASSES_BY_COURSE = gql`
       start_time
       end_time
       title
+      id
     }
   }
 `;

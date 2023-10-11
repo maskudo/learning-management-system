@@ -1,18 +1,11 @@
+import { useUserContext } from '@/context/userContext';
 import { ADD_ENROLLMENT } from '@/graphql/mutations';
-import { GET_USER_BY_EMAIL } from '@/graphql/query';
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Button, message } from 'antd';
 
 export default function About({ info }) {
   const [addEnrollment] = useMutation(ADD_ENROLLMENT);
-  const client = useApolloClient();
-  const email = localStorage.getItem('email');
-  const user = client.readQuery({
-    query: GET_USER_BY_EMAIL,
-    variables: {
-      email,
-    },
-  })?.getUserByEmail;
+  const { user } = useUserContext();
   const handleEnrollment = async () => {
     try {
       const { data } = await addEnrollment({

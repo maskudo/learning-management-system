@@ -3,9 +3,10 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(localizedFormat);
 
-import { useApolloClient, useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { CreateClass } from '.';
 import { Table } from 'antd';
+import { useUserContext } from '@/context/userContext';
 
 const columns = [
   {
@@ -31,14 +32,7 @@ const columns = [
 ];
 
 export default function Classes({ courseInfo }) {
-  const client = useApolloClient();
-  const email = localStorage.getItem('email');
-  const user = client.readQuery({
-    query: GET_USER_BY_EMAIL,
-    variables: {
-      email,
-    },
-  })?.getUserByEmail;
+  const { user } = useUserContext();
   const isTeachingThisCourse = !!user?.teaching?.find(
     (elem) => elem.course.id === courseInfo.id
   );
@@ -51,6 +45,7 @@ export default function Classes({ courseInfo }) {
     data?.getClassesByCourse.map((classInfo) => ({
       ...classInfo,
       teacher: classInfo?.teacher?.name,
+      key: classInfo.id,
     })) ?? [];
 
   return (

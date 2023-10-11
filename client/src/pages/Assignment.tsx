@@ -1,9 +1,14 @@
 import { GET_ASSIGNMENT } from '@/graphql/query';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { Form, Input, Button, Radio } from 'antd';
+import { Form, Button, Radio } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import { SUBMIT_ASSIGNMENT } from '@/graphql/mutations';
+import { useUserContext } from '@/context/userContext';
 
 export default function Assignment() {
+  const { user } = useUserContext();
+  const [submitAssignment] = useMutation(SUBMIT_ASSIGNMENT);
   const { assignment } = useParams();
   const { data, error, loading } = useQuery(GET_ASSIGNMENT, {
     variables: {
@@ -16,8 +21,27 @@ export default function Assignment() {
     ...questions.filter((q) => q.question_type === 'essay'),
     ...questions.filter((q) => q.question_type !== 'essay'),
   ];
-  const handleSubmit = (values) => {
-    console.log(values);
+  const handleSubmit = async (values) => {
+    const solutions = Object.entries(values).map(([question, solution]) => ({
+      question: parseInt(question),
+      answer: {
+        submission_text: typeof solution === 'number' ? null : solution,
+        submitted_option: typeof solution === 'string' ? null : solution,
+      },
+    }));
+    const assignment_id = assignment;
+    const student_id = user.id;
+    console.log({ solutions });
+    const { data } = await submitAssignment({
+      variables: {
+        submittedAssignment: {
+          student_id: parseInt(student_id),
+          assignment_id: parseInt(assignment_id),
+          solutions,
+        },
+      },
+    });
+    console.log(data);
   };
 
   return (
@@ -28,31 +52,33 @@ export default function Assignment() {
       {!sorted.length && <div> No assignment found.</div>}
       {!loading && !error && !!sorted.length && (
         <Form className=" m-auto" layout="vertical" onFinish={handleSubmit}>
-          {sorted.map((question, index) =>
-            question.question_type === 'essay' ? (
-              <Form.Item
-                label={`${index + 1}. ` + question.question_text}
-                name={question.id}
-              >
-                <Input />
-              </Form.Item>
-            ) : (
-              <div className="flex">
+          {sorted.map((question, index) => (
+            <div key={question.id}>
+              {question.question_type === 'essay' ? (
                 <Form.Item
-                  name={question.id}
                   label={`${index + 1}. ` + question.question_text}
+                  name={question.id}
                 >
-                  <Radio.Group className="flex">
-                    {question.question_options.map((option) => (
-                      <Radio key={option.id} value={option.id}>
-                        {option.option_text}
-                      </Radio>
-                    ))}
-                  </Radio.Group>
+                  <TextArea rows={10} maxLength={1000} showCount />
                 </Form.Item>
-              </div>
-            )
-          )}
+              ) : (
+                <div className="flex">
+                  <Form.Item
+                    name={question.id}
+                    label={`${index + 1}. ` + question.question_text}
+                  >
+                    <Radio.Group className="flex">
+                      {question.question_options.map((option) => (
+                        <Radio key={option.id} value={option.id}>
+                          {option.option_text}
+                        </Radio>
+                      ))}
+                    </Radio.Group>
+                  </Form.Item>
+                </div>
+              )}
+            </div>
+          ))}
           {!!sorted.length && (
             <Form.Item>
               <Button
