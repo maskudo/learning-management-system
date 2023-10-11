@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import { useQuery } from '@apollo/client';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
+import { useUserContext } from '@/context/userContext';
+import CreateAssignment from '../assignment/CreateAssignment';
 const columns = [
   {
     title: 'Name',
@@ -25,12 +27,12 @@ const columns = [
 ];
 
 export default function Assignments({ courseId }) {
+  const { user } = useUserContext();
   const { data, error, loading } = useQuery(GET_ASSIGNMENTS_BY_COURSE, {
     variables: {
       courseId,
     },
   });
-
   const assignments =
     data?.getAssignmentsByCourse?.map((elem) => ({ ...elem, key: elem.id })) ??
     [];
@@ -41,6 +43,7 @@ export default function Assignments({ courseId }) {
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div>
+          {user?.role && <CreateAssignment courseId={courseId} />}
           {!assignments?.length ? (
             <div>No Assignments yet...</div>
           ) : (

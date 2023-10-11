@@ -159,11 +159,20 @@ type_defs = gql(
         email: String!
         token: String!
     }
-
+    input OptionInfo {
+        text: String!
+        is_correct: Boolean
+    }
+    input QuestionInput {
+        question: String!
+        options: [OptionInfo!]
+        type: QuestionType!
+    }
     input AddAssignmentInput{
         name: String!
         deadline: Datetime!
         course_id: Int!
+        questions: [QuestionInput]
     }
     input AddQuestionInput{
         assignment_id: Int!

@@ -39,3 +39,12 @@ export const SUBMIT_ASSIGNMENT = gql`
     submitAssignment(submittedAssignment: $submittedAssignment)
   }
 `;
+
+export const ADD_ASSIGNMENT = gql`
+  mutation addAssignment($assignmentInfo: AddAssignmentInput!) {
+    addAssignment(assignmentInfo: $assignmentInfo) {
+      id
+      name
+    }
+  }
+`;

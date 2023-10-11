@@ -2,6 +2,7 @@ from ariadne import ObjectType, QueryType
 from models.Assignment import Assignment
 
 from db import session
+from models.Question import Question, QuestionOption
 from models.Submission import Submission, SubmittedOption
 
 assignmentQuery = QueryType()
@@ -16,8 +17,27 @@ def resolve_add_assignment(*_, assignmentInfo):
         assignmentInfo["deadline"],
     )
     session.add(assignmentObj)
+    session.flush()
+    for question in assignmentInfo["questions"]:
+        q = Question(assignmentObj.id, question["question"], question["type"])
+        session.add(q)
+        session.flush()
+        if question["type"] == "multiple_choice":
+            for option in question["options"]:
+                o = QuestionOption(q.id, option["text"], option["is_correct"])
+                session.add(o)
+
     session.commit()
     return assignmentObj
+
+
+# assignmentObj = Assignment(
+#     assignmentInfo["name"],
+#     assignmentInfo["course_id"],
+#     assignmentInfo["deadline"],
+# )
+# session.add(assignmentObj)
+# session.commit()
 
 
 @assignmentQuery.field("getAssignment")
