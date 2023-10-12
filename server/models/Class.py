@@ -35,4 +35,4 @@ class Class(Base):
         self.cancellation_reason = cancellation_reason
 
     def __repr__(self) -> str:
-        return f"Class(title='{self.title}'), date='{self.date}'"
+        return f"Class(title='{self.title}', start_time='{self.start_time}', end_time='{self.end_time}')"

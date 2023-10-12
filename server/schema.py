@@ -247,6 +247,7 @@ type_defs = gql(
         getEnrollmentsByCourse(courseId: Int!): [Enrollment]
         getTeachersByCourse(courseId: Int!): [CourseTeacher]
         getClassesByCourse(courseId: Int!): [Class]
+        getClassesByUser(userId: Int!): [Class]
         getClassesByTeacher(teacherId: Int!): [Class]
         getAssignment(assignmentId: Int!): Assignment
         getAssignmentsByCourse(courseId: Int!): [Assignment!]
@@ -255,6 +256,7 @@ type_defs = gql(
         getQuestionOption(questionOptionId: Int!): QuestionOption
         getSubmission(submissionId: Int!): Submission
         getSubmittedOption(submittedOptionId: Int!): SubmittedOption
+        getSubmittedAssignmentsByCourse(courseId: Int!): [Submission!]
     }
 """
 )

@@ -1,7 +1,9 @@
+from datetime import datetime
 from ariadne import ObjectType, QueryType
 
 from db import session
 from models.Class import Class
+from models.Enrollment import Enrollment
 
 classQuery = QueryType()
 classMutate = ObjectType("Mutation")
@@ -27,4 +29,17 @@ def resolve_add_class(*_, classInfo):
 @classQuery.field("getClassesByCourse")
 def resolve_get_classes_by_course(*_, courseId):
     classes = session.query(Class).where(Class.course_id == courseId)
+    return classes
+
+
+@classQuery.field("getClassesByUser")
+def resolve_get_classes_by_user(*_, userId):
+    current_time = datetime.now()
+    classes = (
+        session.query(Class)
+        .join(Enrollment, Enrollment.course_id == Class.course_id)
+        .filter(Enrollment.student_id == userId, Class.end_time > current_time)
+        .order_by(Class.start_time)
+        .all()
+    )
     return classes

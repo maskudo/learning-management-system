@@ -8,6 +8,9 @@ import { GET_USER_BY_EMAIL } from './graphql/query';
 import { useQuery } from '@apollo/client';
 import Assignment from './pages/Assignment';
 import { useUserContext } from './context/userContext';
+import Dashboard from './pages/Dashboard';
+import Schedule from './pages/Schedule';
+import Profile from './pages/Profile';
 
 function App() {
   const email = localStorage.getItem('email');
@@ -25,15 +28,15 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}>
-          <Route path="dashboard"></Route>
+          <Route path="dashboard" element={<Dashboard />}></Route>
           <Route path="courses" element={<Courses />} />
           <Route path="courses/:id" element={<Course />}></Route>
           <Route
             path="courses/:id/assignment/:assignment"
             element={<Assignment />}
           />
-          <Route path="schedule"></Route>
-          <Route path="profile"></Route>
+          <Route path="schedule" element={<Schedule />}></Route>
+          <Route path="profile" element={<Profile />}></Route>
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

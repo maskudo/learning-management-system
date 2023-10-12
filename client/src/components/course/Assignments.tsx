@@ -36,14 +36,16 @@ export default function Assignments({ courseId }) {
   const assignments =
     data?.getAssignmentsByCourse?.map((elem) => ({ ...elem, key: elem.id })) ??
     [];
-
+  const isTeachingThisCourse = !!user?.teaching?.find(
+    (item) => item.course.id === courseId
+  );
   return (
     <div className="participants">
       {loading && <div>Loading... </div>}
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div>
-          {user?.role && <CreateAssignment courseId={courseId} />}
+          {isTeachingThisCourse && <CreateAssignment courseId={courseId} />}
           {!assignments?.length ? (
             <div>No Assignments yet...</div>
           ) : (
