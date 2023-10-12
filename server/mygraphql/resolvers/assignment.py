@@ -2,8 +2,9 @@ from ariadne import ObjectType, QueryType
 from models.Assignment import Assignment
 
 from db import session
+from models.Enrollment import Enrollment
 from models.Question import Question, QuestionOption
-from models.Submission import Submission, SubmittedOption
+from models.Submission import Submission, SubmittedAssignment, SubmittedOption
 
 assignmentQuery = QueryType()
 assignmentMutate = ObjectType("Mutation")
@@ -52,9 +53,27 @@ def resolve_assignments_by_course(*_, courseId):
     return assignment
 
 
+@assignmentQuery.field("getAssignmentsByUser")
+def resolve_get_assignments_by_user(*_, userId):
+    assignments = (
+        session.query(Assignment)
+        .join(
+            Enrollment,
+            Enrollment.course_id == Assignment.course_id,
+        )
+        .join(SubmittedAssignment, SubmittedAssignment.assignment_id != Assignment.id)
+        .all()
+    )
+    return assignments
+
+
 @assignmentMutate.field("submitAssignment")
 def resolve_submit_assignment(*_, submittedAssignment):
     try:
+        submittedAssignmentObj = SubmittedAssignment(
+            submittedAssignment["student_id"], submittedAssignment["assignment_id"]
+        )
+        session.add(submittedAssignmentObj)
         for solution in submittedAssignment["solutions"]:
             submissionObj = Submission(
                 submittedAssignment["student_id"],

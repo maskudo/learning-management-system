@@ -149,3 +149,17 @@ export const GET_CLASSES_BY_USER = gql`
     }
   }
 `;
+
+export const GET_ASSIGNMENTS_BY_USER = gql`
+  query getAssignmentsByUser($userId: Int!) {
+    getAssignmentsByUser(userId: $userId) {
+      id
+      deadline
+      name
+      course {
+        name
+        id
+      }
+    }
+  }
+`;

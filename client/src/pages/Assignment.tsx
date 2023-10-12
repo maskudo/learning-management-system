@@ -1,12 +1,13 @@
 import { GET_ASSIGNMENT } from '@/graphql/query';
 import { useMutation, useQuery } from '@apollo/client';
-import { useParams } from 'react-router-dom';
-import { Form, Button, Radio } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Form, Button, Radio, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { SUBMIT_ASSIGNMENT } from '@/graphql/mutations';
 import { useUserContext } from '@/context/userContext';
 
 export default function Assignment() {
+  const navigate = useNavigate();
   const { user } = useUserContext();
   const [submitAssignment] = useMutation(SUBMIT_ASSIGNMENT);
   const { assignment } = useParams();
@@ -31,7 +32,6 @@ export default function Assignment() {
     }));
     const assignment_id = assignment;
     const student_id = user.id;
-    console.log({ solutions });
     const { data } = await submitAssignment({
       variables: {
         submittedAssignment: {
@@ -41,7 +41,10 @@ export default function Assignment() {
         },
       },
     });
-    console.log(data);
+    if (data?.submitAssignment) {
+      message.success('Successfully submitted the assignment.');
+      navigate('/dashboard');
+    }
   };
 
   return (

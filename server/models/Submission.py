@@ -4,6 +4,25 @@ from sqlalchemy.orm import relationship
 from models import Base
 
 
+# TODO: normalize tables
+class SubmittedAssignment(Base):
+    __tablename__ = "submitted_assignments"
+    id = Column(Integer, primary_key=True)
+    assignment_id = Column(Integer, ForeignKey("assignments.id"))
+    student_id = Column(Integer, ForeignKey("users.id"))
+
+    def __init__(
+        self,
+        student_id: int,
+        assignment_id: int,
+    ):
+        self.assignment_id = assignment_id
+        self.student_id = student_id
+
+    def __repr__(self) -> str:
+        return f"SubmittedAssignment(student_id='{self.student_id}', assignment_id='{self.assignment_id}')"
+
+
 class Submission(Base):
     __tablename__ = "submissions"
     id = Column(Integer, primary_key=True)

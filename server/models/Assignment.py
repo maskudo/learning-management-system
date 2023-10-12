@@ -11,6 +11,7 @@ class Assignment(Base):
     course_id = Column(Integer, ForeignKey("courses.id"))
     deadline = Column(DateTime, nullable=False)
     questions = relationship("Question", passive_deletes=True)
+    course = relationship("Course")
 
     def __init__(self, name: str, course_id: int, deadline: datetime) -> None:
         self.name = name
