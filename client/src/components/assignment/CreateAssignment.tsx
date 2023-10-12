@@ -5,6 +5,7 @@ import { Button, DatePicker, Form, Input, Space, message } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import { useMutation } from '@apollo/client';
 import { ADD_ASSIGNMENT } from '@/graphql/mutations';
+import { useRef } from 'react';
 
 dayjs.extend(customParseFormat);
 
@@ -16,6 +17,7 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 
 export default function CreateAssignment({ courseId }) {
   const [addAssignment] = useMutation(ADD_ASSIGNMENT);
+  const datetimeRef = useRef(null);
   const handleSubmit = async (values) => {
     if (
       (values?.essay?.length ?? 0) + (values?.multipleChoice?.length ?? 0) <
@@ -24,8 +26,12 @@ export default function CreateAssignment({ courseId }) {
       message.warning('At least one question is required!');
       return;
     }
-    const questions = values?.multipleChoice
-      ?.map((item) => ({
+    if (!values['deadline']) {
+      datetimeRef.current.focus();
+      return;
+    }
+    const questions = (
+      values?.multipleChoice?.map((item) => ({
         question: item['question'],
         options: [
           {
@@ -46,12 +52,12 @@ export default function CreateAssignment({ courseId }) {
           },
         ],
         type: 'multiple_choice',
-      }))
-      .concat(
-        !values.essay
-          ? []
-          : values.essay.map((essay) => ({ ...essay, type: 'essay' }))
-      );
+      })) ?? []
+    ).concat(
+      !values.essay
+        ? []
+        : values.essay.map((essay) => ({ ...essay, type: 'essay' }))
+    );
     const data = await addAssignment({
       variables: {
         assignmentInfo: {
@@ -62,7 +68,9 @@ export default function CreateAssignment({ courseId }) {
         },
       },
     });
-    console.log(data);
+    if (data.data) {
+      message.success('Assignment created successfully.');
+    }
   };
   return (
     <Space direction="vertical" size={12}>
@@ -73,7 +81,11 @@ export default function CreateAssignment({ courseId }) {
             <Input required />
           </Form.Item>
           <Form.Item label="Deadline" name="deadline" required={true}>
-            <DatePicker picker="date" disabledDate={disabledDate} />
+            <DatePicker
+              ref={datetimeRef}
+              picker="date"
+              disabledDate={disabledDate}
+            />
           </Form.Item>
         </div>
         <Form.List name="essay">
