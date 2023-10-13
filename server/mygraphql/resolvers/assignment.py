@@ -49,9 +49,18 @@ def resolve_assignment(*_, assignmentId):
 
 @assignmentQuery.field("getAssignmentsByCourse")
 def resolve_assignments_by_course(*_, courseId):
-    assignment = session.query(Assignment).where(Assignment.course_id == courseId).all()
-    print(assignment)
-    return assignment
+    assignments = (
+        session.query(Assignment, Enrollment, SubmittedAssignment)
+        .where(Enrollment.course_id == courseId)
+        .join(Assignment, Assignment.course_id == Enrollment.course_id)
+        .outerjoin(
+            SubmittedAssignment, SubmittedAssignment.assignment_id == Assignment.id
+        )
+        .distinct(Assignment.id)
+        .all()
+    )
+    assignments = [assignment[0] for assignment in assignments if assignment[2] is None]
+    return assignments
 
 
 @assignmentQuery.field("getAssignmentsByUser")
