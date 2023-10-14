@@ -108,9 +108,9 @@ export const GET_CLASSES_BY_COURSE = gql`
   }
 `;
 
-export const GET_ASSIGNMENTS_BY_COURSE = gql`
-  query getAssignmentByCourse($courseId: Int!) {
-    getAssignmentsByCourse(courseId: $courseId) {
+export const GET_ASSIGNMENTS_BY_COURSE_USER = gql`
+  query getAssignmentByCourseUser($courseId: Int!, $userId: Int!) {
+    getAssignmentsByCourseUser(courseId: $courseId, userId: $userId) {
       name
       deadline
       id

@@ -23,7 +23,10 @@ export default function Dashboard() {
               <p>No Assignments Due :) </p>
             ) : (
               assignments.map((assignment) => (
-                <AssignmentListItem assignment={assignment} />
+                <AssignmentListItem
+                  key={assignment.id}
+                  assignment={assignment}
+                />
               ))
             )}
           </div>

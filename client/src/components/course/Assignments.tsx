@@ -1,4 +1,4 @@
-import { GET_ASSIGNMENTS_BY_COURSE } from '@/graphql/query';
+import { GET_ASSIGNMENTS_BY_COURSE_USER } from '@/graphql/query';
 import dayjs from 'dayjs';
 import { useQuery } from '@apollo/client';
 import { Table } from 'antd';
@@ -28,14 +28,17 @@ const columns = [
 
 export default function Assignments({ courseId }) {
   const { user } = useUserContext();
-  const { data, error, loading } = useQuery(GET_ASSIGNMENTS_BY_COURSE, {
+  const { data, error, loading } = useQuery(GET_ASSIGNMENTS_BY_COURSE_USER, {
     variables: {
       courseId,
+      userId: user.id,
     },
   });
   const assignments =
-    data?.getAssignmentsByCourse?.map((elem) => ({ ...elem, key: elem.id })) ??
-    [];
+    data?.getAssignmentsByCourseUser?.map((elem) => ({
+      ...elem,
+      key: elem.id,
+    })) ?? [];
   const isTeachingThisCourse = !!user?.teaching?.find(
     (item) => item.course.id === courseId
   );

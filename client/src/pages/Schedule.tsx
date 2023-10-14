@@ -42,7 +42,6 @@ export default function Schedule() {
     key: cls.id,
     course: cls.course.name,
   }));
-  console.log(classes);
   return (
     <div className="schedule">
       {loading && <div>Loading... </div>}

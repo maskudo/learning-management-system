@@ -1,4 +1,5 @@
 import { companyLogo } from '@/constants/images';
+import { Dropdown, MenuProps } from 'antd';
 import { FaRegBell, FaRegUser } from 'react-icons/fa';
 import { NavLink, Link } from 'react-router-dom';
 const navItems = [
@@ -15,6 +16,21 @@ const navItems = [
     to: 'schedule',
   },
 ];
+const items: MenuProps['items'] = [
+  {
+    key: '1',
+    label: (
+      <Link to="/login" onClick={() => console.log('clicked')}>
+        Logout
+      </Link>
+    ),
+  },
+  {
+    key: '2',
+    label: <Link to="/profile">Profile</Link>,
+  },
+];
+
 export default function Header() {
   return (
     <header className="shadow px-20">
@@ -53,9 +69,9 @@ export default function Header() {
             <FaRegBell className="w-8 h-8" />
           </li>
           <li className=" rounded ">
-            <Link to="/profile">
+            <Dropdown menu={{ items }} placement="bottomRight" arrow>
               <FaRegUser className="w-8 h-8" />
-            </Link>
+            </Dropdown>
           </li>
         </ul>
       </nav>

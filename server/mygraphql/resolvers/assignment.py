@@ -32,50 +32,57 @@ def resolve_add_assignment(*_, assignmentInfo):
     return assignmentObj
 
 
-# assignmentObj = Assignment(
-#     assignmentInfo["name"],
-#     assignmentInfo["course_id"],
-#     assignmentInfo["deadline"],
-# )
-# session.add(assignmentObj)
-# session.commit()
-
-
 @assignmentQuery.field("getAssignment")
 def resolve_assignment(*_, assignmentId):
     assignment = session.query(Assignment).where(Assignment.id == assignmentId).first()
     return assignment
 
 
-@assignmentQuery.field("getAssignmentsByCourse")
-def resolve_assignments_by_course(*_, courseId):
-    assignments = (
-        session.query(Assignment, Enrollment, SubmittedAssignment)
-        .where(Enrollment.course_id == courseId)
-        .join(Assignment, Assignment.course_id == Enrollment.course_id)
-        .outerjoin(
-            SubmittedAssignment, SubmittedAssignment.assignment_id == Assignment.id
-        )
-        .distinct(Assignment.id)
+@assignmentQuery.field("getAssignmentsByCourseUser")
+def resolve_assignments_by_course(*_, courseId, userId):
+    if not userId or not courseId:
+        return None
+
+    all_assignments = (
+        session.query(Assignment)
+        .where(Assignment.course_id == courseId)
+        .join(Enrollment, Enrollment.course_id == Assignment.course_id)
+        .where(Enrollment.student_id == userId)
         .all()
     )
-    assignments = [assignment[0] for assignment in assignments if assignment[2] is None]
-    return assignments
+    assignments_done_by_user = (
+        session.query(Assignment)
+        .join(SubmittedAssignment, SubmittedAssignment.assignment_id == Assignment.id)
+        .where(SubmittedAssignment.student_id == userId)
+        .all()
+    )
+
+    s = set(assignments_done_by_user)
+    remaining_assignments = [x for x in all_assignments if x not in s]
+    return remaining_assignments
 
 
 @assignmentQuery.field("getAssignmentsByUser")
 def resolve_get_assignments_by_user(*_, userId):
-    assignments = (
-        session.query(Assignment, Enrollment, SubmittedAssignment)
+    if not userId:
+        return None
+
+    all_assignments = (
+        session.query(Assignment)
+        .join(Enrollment, Enrollment.course_id == Assignment.course_id)
         .where(Enrollment.student_id == userId)
-        .join(Assignment, Assignment.course_id == Enrollment.course_id)
-        .outerjoin(
-            SubmittedAssignment, SubmittedAssignment.assignment_id == Assignment.id
-        )
         .all()
     )
-    assignments = [assignment[0] for assignment in assignments if assignment[2] is None]
-    return assignments
+    assignments_done_by_user = (
+        session.query(Assignment)
+        .join(SubmittedAssignment, SubmittedAssignment.assignment_id == Assignment.id)
+        .where(SubmittedAssignment.student_id == userId)
+        .all()
+    )
+
+    s = set(assignments_done_by_user)
+    remaining_assignments = [x for x in all_assignments if x not in s]
+    return remaining_assignments
 
 
 @assignmentMutate.field("submitAssignment")

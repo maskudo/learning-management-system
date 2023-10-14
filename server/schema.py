@@ -251,6 +251,7 @@ type_defs = gql(
         getClassesByTeacher(teacherId: Int!): [Class]
         getAssignment(assignmentId: Int!): Assignment
         getAssignmentsByCourse(courseId: Int!): [Assignment!]
+        getAssignmentsByCourseUser(courseId: Int!, userId: Int!): [Assignment!]
         getAssignmentsByUser(userId: Int!): [Assignment!]
         getQuestion(questionId: Int!): Question
         getQuestionsByAssignment(assignmentId: Int!): [Question!]
