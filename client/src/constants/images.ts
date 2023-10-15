@@ -1,2 +1,4 @@
 import logo from '@/assets/images/logo.jpg';
-export const companyLogo = logo;
+import courseImage from '@/assets/images/splash.jpg';
+const companyLogo = logo;
+export { courseImage, companyLogo };

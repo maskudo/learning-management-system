@@ -43,7 +43,7 @@ export default function Assignment() {
     });
     if (data?.submitAssignment) {
       message.success('Successfully submitted the assignment.');
-      navigate('/dashboard');
+      navigate('/');
     }
   };
 

@@ -1,11 +1,12 @@
 import { companyLogo } from '@/constants/images';
+import { useUserContext } from '@/context/userContext';
 import { Dropdown, MenuProps } from 'antd';
 import { FaRegBell, FaRegUser } from 'react-icons/fa';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 const navItems = [
   {
     name: 'Dashboard',
-    to: 'dashboard',
+    to: '/',
   },
   {
     name: 'Courses',
@@ -19,11 +20,7 @@ const navItems = [
 const items: MenuProps['items'] = [
   {
     key: '1',
-    label: (
-      <Link to="/login" onClick={() => console.log('clicked')}>
-        Logout
-      </Link>
-    ),
+    label: <div>Logout</div>,
   },
   {
     key: '2',
@@ -32,6 +29,15 @@ const items: MenuProps['items'] = [
 ];
 
 export default function Header() {
+  const navigate = useNavigate();
+  const { setUser } = useUserContext();
+  const onClick = ({ key }) => {
+    if (key === '1') {
+      localStorage.clear();
+      setUser(null);
+      navigate('/login');
+    }
+  };
   return (
     <header className="shadow px-20">
       <nav className="flex items-center gap-6 justify-between">
@@ -69,7 +75,7 @@ export default function Header() {
             <FaRegBell className="w-8 h-8" />
           </li>
           <li className=" rounded ">
-            <Dropdown menu={{ items }} placement="bottomRight" arrow>
+            <Dropdown menu={{ items, onClick }} placement="bottomRight" arrow>
               <FaRegUser className="w-8 h-8" />
             </Dropdown>
           </li>

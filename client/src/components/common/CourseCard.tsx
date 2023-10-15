@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { courseImage } from '@/constants/images';
 
 const { Meta } = Card;
 
@@ -11,15 +12,7 @@ const CourseCard: React.FC = ({ course }) => {
     <Card
       className=""
       onClick={handleClick}
-      cover={
-        <img
-          alt="course-cover"
-          src={
-            course.image ??
-            'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'
-          }
-        />
-      }
+      cover={<img alt="course-cover" src={course.image ?? courseImage} />}
     >
       <Meta
         title={course.name}

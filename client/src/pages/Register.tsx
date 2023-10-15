@@ -36,12 +36,12 @@ export default function Register() {
 
   return (
     <FormContainer>
-      <header className="my-4 flex flex-col">
+      <header className="my-2 flex flex-col">
         <div className="logo flex justify-center align-middle">
           <img src={companyLogo} alt="company-logo" />
         </div>
       </header>
-      <Form className=" m-auto" layout="vertical" onFinish={handleSubmit}>
+      <Form className="m-auto" layout="vertical" onFinish={handleSubmit}>
         <Form.Item
           label="Name"
           name="name"
