@@ -1,4 +1,5 @@
 from ariadne import ObjectType, QueryType
+from ariadne.exceptions import HttpError
 from models.Assignment import Assignment
 
 from db import session
@@ -35,6 +36,8 @@ def resolve_add_assignment(*_, assignmentInfo):
 @assignmentQuery.field("getAssignment")
 def resolve_assignment(*_, assignmentId):
     assignment = session.query(Assignment).where(Assignment.id == assignmentId).first()
+    if not assignment:
+        raise HttpError("Assignment not found")
     return assignment
 
 

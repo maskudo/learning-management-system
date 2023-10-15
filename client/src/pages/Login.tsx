@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { companyLogo } from '@/constants/images';
 import FormContainer from '@/components/auth/FormContainer';
 import { LOGIN } from '@/graphql/mutations';
@@ -9,16 +9,20 @@ export default function Login() {
   const navigate = useNavigate();
   const handleSubmit = async (values: { email: string; password: string }) => {
     const { password, email } = values;
-    const { data } = await login({
-      variables: {
-        email,
-        password,
-      },
-    });
-    if (data.login) {
-      localStorage.setItem('token', data?.login?.token);
-      localStorage.setItem('email', data?.login?.email);
-      navigate('/');
+    try {
+      const { data } = await login({
+        variables: {
+          email,
+          password,
+        },
+      });
+      if (data.login) {
+        localStorage.setItem('token', data?.login?.token);
+        localStorage.setItem('email', data?.login?.email);
+        navigate('/');
+      }
+    } catch (e) {
+      message.error(e.message);
     }
   };
   const [login] = useMutation(LOGIN);

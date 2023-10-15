@@ -18,7 +18,6 @@ export default function Course() {
       id: parseInt(id ?? ''),
     },
   });
-
   const course = data?.course;
   return (
     <div className="course">

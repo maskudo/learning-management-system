@@ -1,5 +1,5 @@
 from ariadne import ObjectType
-from ariadne.exceptions import HttpBadRequestError
+from ariadne.exceptions import HttpError
 from db import session
 from middleware.JWTManager import JWTManager
 
@@ -13,11 +13,11 @@ mutate = ObjectType("Mutation")
 def resolve_login_user(*_, email, password):
     existing_user = session.query(User).where(User.email == email).first()
     if not existing_user:
-        return None
+        raise HttpError(f"Email '{email}' doesn't exist.")
 
     hashed_password = hash_password(password)
     if hashed_password != existing_user.password:
-        return None
+        raise HttpError("Incorrect Email or Password")
     token = JWTManager.generate_token({"sub": email})
     login_info = {"email": email, "token": token}
     return login_info
@@ -28,9 +28,9 @@ def resolve_register(*_, user):
     email_check = session.query(User).where(User.email == user["email"]).first()
     phone_check = session.query(User).where(User.phone_no == user["phone_no"]).first()
     if email_check:
-        raise HttpBadRequestError("Email already in use!")
+        raise HttpError("Email already in use!")
     elif phone_check:
-        raise HttpBadRequestError("Phone number already in use!")
+        raise HttpError("Phone number already in use!")
     userObj = User(
         user["name"],
         user["email"],

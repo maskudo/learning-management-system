@@ -1,4 +1,5 @@
 from ariadne import ObjectType, QueryType
+from ariadne.exceptions import HttpError
 
 from db import session
 from models.Course import Course
@@ -14,7 +15,9 @@ def resolve_courses(*_):
 
 @courseQuery.field("course")
 def resolve_course(*_, courseId):
-    course = session.query(Course).where(Course.id == courseId).one()
+    course = session.query(Course).where(Course.id == courseId).first()
+    if not course:
+        raise HttpError(f"Course with id '{courseId}' not found")
     return course
 
 
@@ -32,7 +35,7 @@ def resolve_add_course(*_, course):
         session.commit()
         return courseObj
     except Exception:
-        return None
+        raise HttpError("Error adding course")
 
 
 @courseMutate.field("deleteCourse")

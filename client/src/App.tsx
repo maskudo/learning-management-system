@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Schedule from './pages/Schedule';
 import Profile from './pages/Profile';
 import PrivateRoute from './utils/PrivateRoute';
+import Error404 from './pages/404';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
   );

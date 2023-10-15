@@ -52,7 +52,6 @@ export default function Assignment() {
       <div className="text-2xl mb-8">{title}</div>
       {loading && <div>Loading... </div>}
       {error && <div>{error.message}</div>}
-      {!sorted.length && <div> No assignment found.</div>}
       {!loading && !error && !!sorted.length && (
         <Form className=" m-auto" layout="vertical" onFinish={handleSubmit}>
           {sorted.map((question, index) => (
