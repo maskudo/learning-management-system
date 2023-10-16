@@ -1,38 +1,13 @@
 from ariadne import ObjectType, QueryType
-from models.Submission import Submission, SubmittedOption
+from ariadne.exceptions import HttpError
+from sqlalchemy import and_
+from models.Assignment import Assignment
+from models.Submission import Submission, SubmittedAssignment, SubmittedOption
 
 from db import session
 
 submissionQuery = QueryType()
 submissionMutate = ObjectType("Mutation")
-
-
-@submissionMutate.field("addSubmission")
-def resolve_add_submission(*_, submissionInfo):
-    print(submissionInfo)
-    submissionObj = Submission(
-        submissionInfo["student_id"],
-        submissionInfo["assignment_id"],
-        submissionInfo["question_id"],
-        submissionInfo["submission_text"],
-        submissionInfo["score"],
-    )
-    session.add(submissionObj)
-    session.commit()
-    return submissionObj
-
-
-# @submissionMutate.field("deletesubmission")
-# def resolve_delete_submission(*_, asssignmentId):
-#     try:
-#         submission = (
-#             session.query(submission).where(submission.id == asssignmentId).one()
-#         )
-#         session.delete(submission)
-#         session.commit()
-#         return True
-#     except Exception:
-#         return False
 
 
 @submissionQuery.field("getSubmission")
@@ -60,3 +35,49 @@ def resolve_submission_option(*_, submissionOptionId):
         .first()
     )
     return submission_option
+
+
+@submissionMutate.field("submitAssignment")
+def resolve_submit_assignment(*_, submittedAssignment):
+    already_submitted = (
+        session.query(SubmittedAssignment)
+        .where(
+            and_(
+                SubmittedAssignment.student_id == submittedAssignment["student_id"],
+                SubmittedAssignment.assignment_id
+                == submittedAssignment["assignment_id"],
+            )
+        )
+        .first()
+    )
+    if already_submitted:
+        return HttpError("Cannot have multiple submissions on same assignment.")
+    submittedAssignmentObj = SubmittedAssignment(
+        submittedAssignment["student_id"], submittedAssignment["assignment_id"]
+    )
+    session.add(submittedAssignmentObj)
+    for solution in submittedAssignment["solutions"]:
+        submissionObj = Submission(
+            submittedAssignmentObj.id,
+            solution["question"],
+            solution["answer"]["submission_text"],
+        )
+        session.add(submissionObj)
+        session.flush()
+        submitted_option = solution["answer"]["submitted_option"]
+        if submitted_option:
+            submitted_option = SubmittedOption(submissionObj.id, submitted_option)
+            session.add(submitted_option)
+    session.commit()
+    return True
+
+
+@submissionQuery.field("getSubmittedAssignmentsByCourse")
+def resolve_submitted_assignments_by_course(*_, courseId):
+    submitted_assignments = (
+        session.query(SubmittedAssignment)
+        .join(Assignment, Assignment.id == SubmittedAssignment.assignment_id)
+        .where(Assignment.course_id == courseId)
+        .all()
+    )
+    return submitted_assignments

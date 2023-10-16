@@ -20,19 +20,19 @@ const navItems = [
 const items: MenuProps['items'] = [
   {
     key: '1',
-    label: <div>Logout</div>,
+    label: <Link to="/profile">Profile</Link>,
   },
   {
     key: '2',
-    label: <Link to="/profile">Profile</Link>,
+    label: <div>Logout</div>,
   },
 ];
 
 export default function Header() {
   const navigate = useNavigate();
-  const { setUser } = useUserContext();
+  const { setUser, user } = useUserContext();
   const onClick = ({ key }) => {
-    if (key === '1') {
+    if (key === '2') {
       localStorage.clear();
       setUser(null);
       navigate('/login');
@@ -71,9 +71,7 @@ export default function Header() {
           </ul>
         </div>
         <ul className="right flex gap-6 items-center">
-          <li className=" rounded ">
-            <FaRegBell className="w-8 h-8" />
-          </li>
+          <li className=" rounded ">{user?.name}</li>
           <li className=" rounded ">
             <Dropdown menu={{ items, onClick }} placement="bottomRight" arrow>
               <FaRegUser className="w-8 h-8" />

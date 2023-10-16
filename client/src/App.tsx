@@ -10,6 +10,8 @@ import Schedule from './pages/Schedule';
 import Profile from './pages/Profile';
 import PrivateRoute from './utils/PrivateRoute';
 import Error404 from './pages/404';
+import Submissions from './pages/Submissions';
+import Submission from './pages/Submission';
 
 function App() {
   return (
@@ -23,6 +25,14 @@ function App() {
             <Route
               path="courses/:id/assignment/:assignment"
               element={<Assignment />}
+            ></Route>
+            <Route
+              path="courses/:id/assignment/:assignment/submissions"
+              element={<Submissions />}
+            />
+            <Route
+              path="courses/:id/assignment/:assignment/submissions/:submission"
+              element={<Submission />}
             />
             <Route path="schedule" element={<Schedule />}></Route>
             <Route path="profile" element={<Profile />}></Route>

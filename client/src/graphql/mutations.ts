@@ -35,7 +35,7 @@ export const ADD_CLASS = gql`
 `;
 
 export const SUBMIT_ASSIGNMENT = gql`
-  mutation submitAssignment($submittedAssignment: SubmittedAssignment!) {
+  mutation submitAssignment($submittedAssignment: SubmittedAssignmentInput!) {
     submitAssignment(submittedAssignment: $submittedAssignment)
   }
 `;

@@ -1,35 +1,8 @@
 import { useUserContext } from '@/context/userContext';
 import { GET_CLASSES_BY_TEACHER, GET_CLASSES_BY_USER } from '@/graphql/query';
 import { useQuery } from '@apollo/client';
-import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-dayjs.extend(localizedFormat);
 
-import { Table } from 'antd';
 import ScheduleTable from '@/components/ScheduleTable';
-
-const columns = [
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    render: (text: string) => <div className="capitalize">{text}</div>,
-  },
-  {
-    title: 'Course',
-    dataIndex: 'course',
-    render: (text: string) => <div className="capitalize">{text}</div>,
-  },
-  {
-    title: 'Start Time',
-    dataIndex: 'start_time',
-    render: (text: string) => <div>{dayjs(text).format('LLLL')}</div>,
-  },
-  {
-    title: 'End Time',
-    dataIndex: 'end_time',
-    render: (text: string) => <div>{dayjs(text).format('LLLL')}</div>,
-  },
-];
 
 export default function Schedule() {
   const { user } = useUserContext();

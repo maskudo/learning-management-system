@@ -100,12 +100,18 @@ type_defs = gql(
         score: Int
         submission_option: SubmittedOption
     }
-
+    type SubmittedAssignment {
+        id: Int!
+        student: User!
+        assignment: Assignment!
+    }
     type SubmittedOption {
         id: Int!
         submission: Submission
         option: QuestionOption
     }
+
+
 
     input AddClassInput {
         title: String!
@@ -207,7 +213,7 @@ type_defs = gql(
         submission_text: String
         submitted_option: Int
     }
-    input SubmittedAssignment{
+    input SubmittedAssignmentInput{
         assignment_id: Int!
         student_id: Int!
         solutions : [QuestionAnswerInput]
@@ -231,7 +237,7 @@ type_defs = gql(
         addQuestionOption(questionOptionInfo: AddQuestionOptionInput!): QuestionOption
         addSubmission(submissionInfo: AddSubmissionInput!): Submission
         addSubmittedOption(submittedOptionInfo: AddSubmittedOptionInput!): SubmittedOption
-        submitAssignment(submittedAssignment: SubmittedAssignment!): Boolean
+        submitAssignment(submittedAssignment: SubmittedAssignmentInput!): Boolean
     }
 
     type Query {
@@ -257,8 +263,10 @@ type_defs = gql(
         getQuestionsByAssignment(assignmentId: Int!): [Question!]
         getQuestionOption(questionOptionId: Int!): QuestionOption
         getSubmission(submissionId: Int!): Submission
+        getSubmissionsByCourse(courseId: Int!): [Submission]
         getSubmittedOption(submittedOptionId: Int!): SubmittedOption
-        getSubmittedAssignmentsByCourse(courseId: Int!): [Submission!]
+        getSubmittedAssignmentsByCourse(courseId: Int!): [SubmittedAssignment!]
+        getSubmittedAssignment(courseId: Int!): SubmittedAssignment!
     }
 """
 )

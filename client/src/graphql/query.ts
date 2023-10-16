@@ -177,3 +177,17 @@ export const GET_ASSIGNMENTS_BY_USER = gql`
     }
   }
 `;
+
+export const GET_SUBMITTED_ASSIGNMENTS_BY_COURSE = gql`
+  query getSubmittedAssignmentsByCourse($courseId: Int!) {
+    getSubmittedAssignmentsByCourse(courseId: $courseId) {
+      id
+      student {
+        name
+      }
+      assignment {
+        name
+      }
+    }
+  }
+`;

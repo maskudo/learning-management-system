@@ -1,6 +1,6 @@
 import { GET_ASSIGNMENT } from '@/graphql/query';
 import { useApolloClient, useMutation, useQuery } from '@apollo/client';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Radio, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { SUBMIT_ASSIGNMENT } from '@/graphql/mutations';
@@ -34,30 +34,41 @@ export default function Assignment() {
     }));
     const assignment_id = assignment;
     const student_id = user.id;
-    const { data } = await submitAssignment({
-      variables: {
-        submittedAssignment: {
-          student_id: parseInt(student_id),
-          assignment_id: parseInt(assignment_id),
-          solutions,
+    try {
+      const { data } = await submitAssignment({
+        variables: {
+          submittedAssignment: {
+            student_id: parseInt(student_id),
+            assignment_id: parseInt(assignment_id),
+            solutions,
+          },
         },
-      },
-    });
-    if (data?.submitAssignment) {
-      message.success('Successfully submitted the assignment.');
-      client.refetchQueries([
-        'getAssignmentByCourseUser',
-        'getAssignmentsByUser',
-      ]);
-      navigate('/');
+      });
+      if (data?.submitAssignment) {
+        message.success('Successfully submitted the assignment.');
+        await client.refetchQueries([
+          'getAssignmentByCourseUser',
+          'getAssignmentsByUser',
+        ]);
+      }
+    } catch (e) {
+      message.error(e.message);
     }
+    navigate('/');
   };
   const teachingCourses = user?.teaching?.map((course) => course.course.id);
   const isTeachingThisCourse = teachingCourses?.includes(parseInt(id));
-
   return (
     <div className="assignment">
-      <div className="text-2xl mb-8">{title}</div>
+      <div className="text-2xl mb-8">
+        {title}
+        {isTeachingThisCourse && (
+          <Link to="submissions" className="text-sm ml-4 text-blue-800">
+            {' '}
+            View Submissions
+          </Link>
+        )}{' '}
+      </div>
       {loading && <div>Loading... </div>}
       {error && <div>{error.message}</div>}
       {!loading && !error && !!sorted.length && (

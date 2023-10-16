@@ -10,6 +10,8 @@ class SubmittedAssignment(Base):
     id = Column(Integer, primary_key=True)
     assignment_id = Column(Integer, ForeignKey("assignments.id"))
     student_id = Column(Integer, ForeignKey("users.id"))
+    assignment = relationship("Assignment")
+    student = relationship("User")
 
     def __init__(
         self,
@@ -27,28 +29,27 @@ class Submission(Base):
     __tablename__ = "submissions"
     id = Column(Integer, primary_key=True)
     assignment_id = Column(Integer, ForeignKey("assignments.id"))
-    question_id = Column(Integer, ForeignKey("questions.id"))
-    student_id = Column(Integer, ForeignKey("users.id"))
+    submitted_assignment_id = Column(Integer, ForeignKey("submitted_assignments.id"))
+    # question_id = Column(Integer, ForeignKey("questions.id"))
+    # student_id = Column(Integer, ForeignKey("users.id"))
     submission_text = Column(String, nullable=True)
     score = Column(Integer, nullable=True)
     submitted_option = relationship("SubmittedOption")
 
     def __init__(
         self,
-        student_id: int,
-        assignment_id: int,
+        submitted_assignment_id: int,
         question_id: int,
         submission_text: Optional[str] = None,
         score: Optional[int] = None,
     ):
-        self.assignment_id = assignment_id
-        self.student_id = student_id
+        self.submitted_assignment_id = submitted_assignment_id
         self.question_id = question_id
         self.submission_text = submission_text
         self.score = score
 
     def __repr__(self) -> str:
-        return f"Submission(student_id='{self.student_id}', assignment_id='{self.assignment_id}', submission_text='{self.submission_text}')"
+        return f"Submission(submitted_assignment_id='{self.submitted_assignment_id}', submission_text='{self.submission_text}')"
 
 
 class SubmittedOption(Base):
