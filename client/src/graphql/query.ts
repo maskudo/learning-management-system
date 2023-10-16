@@ -191,3 +191,30 @@ export const GET_SUBMITTED_ASSIGNMENTS_BY_COURSE = gql`
     }
   }
 `;
+
+export const GET_SUBMITTED_ASSIGNMENT = gql`
+  query getSubmittedAssignment($submittedAssignmentId: Int!) {
+    getSubmittedAssignment(submittedAssignmentId: $submittedAssignmentId) {
+      assignment {
+        name
+      }
+      student {
+        id
+        name
+      }
+      submissions {
+        question {
+          question_text
+        }
+        submission_text
+        submitted_option {
+          option {
+            option_text
+            is_correct
+          }
+          id
+        }
+      }
+    }
+  }
+`;

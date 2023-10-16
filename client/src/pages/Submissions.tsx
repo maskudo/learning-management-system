@@ -20,17 +20,16 @@ const columns = [
   {
     title: 'Link',
     dataIndex: 'id',
-    render: (text: string) => <Link to={`${text}`}>Link</Link>,
+    render: (text: string) => <Link to={`submissions/${text}`}>Link</Link>,
   },
 ];
 
-export default function Submissions() {
-  const { id } = useParams();
+export default function Submissions({ courseId }) {
   const { data, error, loading } = useQuery(
     GET_SUBMITTED_ASSIGNMENTS_BY_COURSE,
     {
       variables: {
-        courseId: parseInt(id),
+        courseId,
       },
     }
   );

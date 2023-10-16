@@ -29,11 +29,12 @@ class SubmittedAssignment(Base):
 class Submission(Base):
     __tablename__ = "submissions"
     id = Column(Integer, primary_key=True)
-    assignment_id = Column(Integer, ForeignKey("assignments.id"))
     submitted_assignment_id = Column(Integer, ForeignKey("submitted_assignments.id"))
+    question_id = Column(Integer, ForeignKey("questions.id"))
     submission_text = Column(String, nullable=True)
     score = Column(Integer, nullable=True)
     submitted_option = relationship("SubmittedOption", uselist=False)
+    question = relationship("Question", uselist=False)
 
     def __init__(
         self,

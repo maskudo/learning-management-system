@@ -10,6 +10,7 @@ import { GET_COURSE_BY_ID } from '@/graphql/query';
 import { useQuery } from '@apollo/client';
 import { Tabs } from 'antd';
 import { useParams } from 'react-router-dom';
+import Submissions from './Submissions';
 
 export default function Course() {
   const { id } = useParams();
@@ -58,8 +59,14 @@ export default function Course() {
                 // disabled: getUserByEmail.role === 'student',
               },
               {
-                label: 'Grades',
+                label: 'Submissions',
                 key: '5',
+                children: <Submissions courseId={course.id} />,
+                // disabled: getUserByEmail.role === 'student',
+              },
+              {
+                label: 'Grades',
+                key: '7',
                 children: <Grades />,
                 // disabled: getUserByEmail.role === 'student',
               },

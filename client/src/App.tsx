@@ -31,7 +31,7 @@ function App() {
               element={<Submissions />}
             />
             <Route
-              path="courses/:id/assignment/:assignment/submissions/:submission"
+              path="courses/:id/submissions/:submission"
               element={<Submission />}
             />
             <Route path="schedule" element={<Schedule />}></Route>

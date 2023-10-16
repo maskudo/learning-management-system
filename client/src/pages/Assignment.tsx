@@ -60,15 +60,7 @@ export default function Assignment() {
   const isTeachingThisCourse = teachingCourses?.includes(parseInt(id));
   return (
     <div className="assignment">
-      <div className="text-2xl mb-8">
-        {title}
-        {isTeachingThisCourse && (
-          <Link to="submissions" className="text-sm ml-4 text-blue-800">
-            {' '}
-            View Submissions
-          </Link>
-        )}{' '}
-      </div>
+      <div className="text-2xl mb-8">{title}</div>
       {loading && <div>Loading... </div>}
       {error && <div>{error.message}</div>}
       {!loading && !error && !!sorted.length && (
