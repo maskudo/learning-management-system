@@ -136,6 +136,20 @@ export const GET_ASSIGNMENT = gql`
   }
 `;
 
+export const GET_CLASSES_BY_TEACHER = gql`
+  query getClassesByTeacher($teacherId: Int!) {
+    getClassesByTeacher(teacherId: $teacherId) {
+      id
+      title
+      start_time
+      end_time
+      course {
+        name
+      }
+    }
+  }
+`;
+
 export const GET_CLASSES_BY_USER = gql`
   query getClassesByUser($userId: Int!) {
     getClassesByUser(userId: $userId) {

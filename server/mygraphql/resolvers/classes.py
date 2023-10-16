@@ -3,6 +3,7 @@ from ariadne import ObjectType, QueryType
 
 from db import session
 from models.Class import Class
+from models.CourseTeacher import CourseTeacher
 from models.Enrollment import Enrollment
 
 classQuery = QueryType()
@@ -39,6 +40,19 @@ def resolve_get_classes_by_user(*_, userId):
         session.query(Class)
         .join(Enrollment, Enrollment.course_id == Class.course_id)
         .filter(Enrollment.student_id == userId, Class.end_time > current_time)
+        .order_by(Class.start_time)
+        .all()
+    )
+    return classes
+
+
+@classQuery.field("getClassesByTeacher")
+def resolve_get_classes_by_teacher(*_, teacherId):
+    current_time = datetime.now()
+    classes = (
+        session.query(Class)
+        .join(CourseTeacher, CourseTeacher.course_id == Class.course_id)
+        .filter(CourseTeacher.teacher_id == teacherId, Class.end_time > current_time)
         .order_by(Class.start_time)
         .all()
     )

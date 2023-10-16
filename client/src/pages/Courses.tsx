@@ -11,8 +11,12 @@ export default function Courses() {
   const myCoursesId = user?.enrollments.map(
     (enrollment) => enrollment.course.id
   );
+  const teachingCoursesId = user?.teaching.map((teach) => teach.course.id);
   const myCourses = courses?.filter(
     (course) => myCoursesId?.includes(course.id)
+  );
+  const teachingCourses = courses?.filter(
+    (course) => teachingCoursesId?.includes(course.id)
   );
 
   return (
@@ -42,6 +46,17 @@ export default function Courses() {
                 children: (
                   <div className="courses grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
                     {courses.map((course) => (
+                      <CourseCard key={course.id} course={course} />
+                    ))}
+                  </div>
+                ),
+              },
+              {
+                label: user?.role !== 'student' ? 'Teaching' : '',
+                key: '3',
+                children: (
+                  <div className="courses grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
+                    {teachingCourses.map((course) => (
                       <CourseCard key={course.id} course={course} />
                     ))}
                   </div>
