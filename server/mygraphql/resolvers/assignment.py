@@ -1,5 +1,6 @@
 from ariadne import ObjectType, QueryType
 from ariadne.exceptions import HttpError
+from models.CourseTeacher import CourseTeacher
 from models.Assignment import Assignment
 
 from db import session
@@ -43,16 +44,21 @@ def resolve_assignment(*_, assignmentId):
 
 @assignmentQuery.field("getAssignmentsByCourseUser")
 def resolve_assignments_by_course(*_, courseId, userId):
-    if not userId or not courseId:
-        return None
+    is_teaching = (
+        session.query(CourseTeacher)
+        .where(CourseTeacher.teacher_id == userId)
+        .where(CourseTeacher.course_id == courseId)
+        .first()
+    )
 
     all_assignments = (
-        session.query(Assignment)
-        .where(Assignment.course_id == courseId)
-        .join(Enrollment, Enrollment.course_id == Assignment.course_id)
-        .where(Enrollment.student_id == userId)
+        session.query(Assignment).where(Assignment.course_id == courseId)
+        # .join(Enrollment, Enrollment.course_id == Assignment.course_id)
+        # .where(Enrollment.student_id == userId)
         .all()
     )
+    if is_teaching:
+        return all_assignments
     assignments_done_by_user = (
         session.query(Assignment)
         .join(SubmittedAssignment, SubmittedAssignment.assignment_id == Assignment.id)
@@ -69,7 +75,6 @@ def resolve_assignments_by_course(*_, courseId, userId):
 def resolve_get_assignments_by_user(*_, userId):
     if not userId:
         return None
-
     all_assignments = (
         session.query(Assignment)
         .join(Enrollment, Enrollment.course_id == Assignment.course_id)

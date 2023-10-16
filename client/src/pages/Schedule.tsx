@@ -55,7 +55,7 @@ export default function Schedule() {
       course: cls.course.name,
     })
   );
-  console.log(teachingClasses);
+
   return (
     <div className="schedule flex flex-col gap-12">
       {user?.role !== 'student' && (

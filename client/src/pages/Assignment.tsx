@@ -1,5 +1,5 @@
 import { GET_ASSIGNMENT } from '@/graphql/query';
-import { useMutation, useQuery } from '@apollo/client';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Radio, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -8,9 +8,11 @@ import { useUserContext } from '@/context/userContext';
 
 export default function Assignment() {
   const navigate = useNavigate();
+
+  const client = useApolloClient();
   const { user } = useUserContext();
   const [submitAssignment] = useMutation(SUBMIT_ASSIGNMENT);
-  const { assignment } = useParams();
+  const { assignment, id } = useParams();
   const { data, error, loading } = useQuery(GET_ASSIGNMENT, {
     variables: {
       assignmentId: parseInt(assignment ?? ''),
@@ -43,9 +45,15 @@ export default function Assignment() {
     });
     if (data?.submitAssignment) {
       message.success('Successfully submitted the assignment.');
+      client.refetchQueries([
+        'getAssignmentByCourseUser',
+        'getAssignmentsByUser',
+      ]);
       navigate('/');
     }
   };
+  const teachingCourses = user?.teaching?.map((course) => course.course.id);
+  const isTeachingThisCourse = teachingCourses?.includes(parseInt(id));
 
   return (
     <div className="assignment">
@@ -89,6 +97,7 @@ export default function Assignment() {
                 // styles={{ color: 'white' }}
                 block
                 size="large"
+                disabled={isTeachingThisCourse}
                 htmlType="submit"
               >
                 Submit
