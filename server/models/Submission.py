@@ -12,6 +12,7 @@ class SubmittedAssignment(Base):
     student_id = Column(Integer, ForeignKey("users.id"))
     assignment = relationship("Assignment")
     student = relationship("User")
+    submissions = relationship("Submission")
 
     def __init__(
         self,
@@ -30,11 +31,9 @@ class Submission(Base):
     id = Column(Integer, primary_key=True)
     assignment_id = Column(Integer, ForeignKey("assignments.id"))
     submitted_assignment_id = Column(Integer, ForeignKey("submitted_assignments.id"))
-    # question_id = Column(Integer, ForeignKey("questions.id"))
-    # student_id = Column(Integer, ForeignKey("users.id"))
     submission_text = Column(String, nullable=True)
     score = Column(Integer, nullable=True)
-    submitted_option = relationship("SubmittedOption")
+    submitted_option = relationship("SubmittedOption", uselist=False)
 
     def __init__(
         self,
@@ -49,7 +48,7 @@ class Submission(Base):
         self.score = score
 
     def __repr__(self) -> str:
-        return f"Submission(submitted_assignment_id='{self.submitted_assignment_id}', submission_text='{self.submission_text}')"
+        return f"Submission(submitted_assignment_id='{self.submitted_assignment_id}', submission_text='{self.submission_text}'), {self.submitted_option}"
 
 
 class SubmittedOption(Base):
@@ -57,10 +56,12 @@ class SubmittedOption(Base):
     id = Column(Integer, primary_key=True)
     submission_id = Column(Integer, ForeignKey("submissions.id"))
     option_id = Column(Integer, ForeignKey("question_options.id"))
+    option = relationship("QuestionOption")
+    submission = relationship("Submission", back_populates="submitted_option")
 
     def __init__(self, submission_id: int, option_id: int):
         self.submission_id = submission_id
         self.option_id = option_id
 
     def __repr__(self) -> str:
-        return f"SubmittedOption(id='{self.id}', submission_id='{self.submission_id}', option_id='{self.option_id}')"
+        return f"SubmittedOption(id='{self.id}', submission_id='{self.submission_id}', option_id='{self.option_id})"

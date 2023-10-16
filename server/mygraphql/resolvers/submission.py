@@ -56,6 +56,7 @@ def resolve_submit_assignment(*_, submittedAssignment):
         submittedAssignment["student_id"], submittedAssignment["assignment_id"]
     )
     session.add(submittedAssignmentObj)
+    session.flush()
     for solution in submittedAssignment["solutions"]:
         submissionObj = Submission(
             submittedAssignmentObj.id,
@@ -63,9 +64,9 @@ def resolve_submit_assignment(*_, submittedAssignment):
             solution["answer"]["submission_text"],
         )
         session.add(submissionObj)
-        session.flush()
         submitted_option = solution["answer"]["submitted_option"]
         if submitted_option:
+            session.flush()
             submitted_option = SubmittedOption(submissionObj.id, submitted_option)
             session.add(submitted_option)
     session.commit()
@@ -81,3 +82,9 @@ def resolve_submitted_assignments_by_course(*_, courseId):
         .all()
     )
     return submitted_assignments
+
+
+@submissionQuery.field("getSubmittedAssignment")
+def resolve_submitted_assignments(*_, submittedAssignmentId):
+    submission = session.query(SubmittedAssignment).get(submittedAssignmentId)
+    return submission

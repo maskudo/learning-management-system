@@ -98,15 +98,16 @@ type_defs = gql(
         student: User!
         submission_text: String
         score: Int
-        submission_option: SubmittedOption
+        submitted_option: SubmittedOption
     }
     type SubmittedAssignment {
         id: Int!
         student: User!
         assignment: Assignment!
+        submissions: [Submission!]
     }
     type SubmittedOption {
-        id: Int!
+        id: Int
         submission: Submission
         option: QuestionOption
     }
@@ -266,7 +267,7 @@ type_defs = gql(
         getSubmissionsByCourse(courseId: Int!): [Submission]
         getSubmittedOption(submittedOptionId: Int!): SubmittedOption
         getSubmittedAssignmentsByCourse(courseId: Int!): [SubmittedAssignment!]
-        getSubmittedAssignment(courseId: Int!): SubmittedAssignment!
+        getSubmittedAssignment(submittedAssignmentId: Int!): SubmittedAssignment!
     }
 """
 )
