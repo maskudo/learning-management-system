@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import { FaCheck, FaPenNib, FaXmark } from 'react-icons/fa6';
 import { Button, Form, Select, message } from 'antd';
 import { SUBMIT_GRADE } from '@/graphql/mutations';
+import { useUserContext } from '@/context/userContext';
 
 export default function Submission() {
-  const { submission } = useParams();
+  const { user } = useUserContext();
+  const { submission, id } = useParams();
   const { data, loading, error } = useQuery(GET_SUBMITTED_ASSIGNMENT, {
     variables: {
       submittedAssignmentId: parseInt(submission),
@@ -29,7 +31,8 @@ export default function Submission() {
     }
   };
   const grade = data?.getSubmittedAssignment?.grade?.grade;
-  console.log(grade);
+  const teachingCourses = user?.teaching?.map((course) => course.course.id);
+  const isTeachingThisCourse = teachingCourses?.includes(parseInt(id));
   return (
     <div className="submission">
       {loading && <div>Loading... </div>}
@@ -77,48 +80,52 @@ export default function Submission() {
         (grade ? (
           <div className="my-8">Grade: {grade}</div>
         ) : (
-          <Form
-            name="basic"
-            layout="vertical"
-            initialValues={{ remember: true, grade: '' }}
-            onFinish={handleSubmit}
-            className="my-8"
-          >
-            <div className="flex items-center gap-2">
-              <Form.Item
-                label="Grade"
-                name="grade"
-                rules={[{ required: true, message: 'Please assign as grade.' }]}
-              >
-                <Select
-                  // defaultValue=""
-                  placeholder="Grade"
-                  size="large"
-                  aria-required
-                  style={{ width: 120 }}
-                  options={[
-                    { value: 'A', label: 'A' },
-                    { value: 'B', label: 'B' },
-                    { value: 'C', label: 'C' },
-                    { value: 'D', label: 'D' },
-                    { value: 'E', label: 'E' },
-                    { value: 'F', label: 'F' },
+          isTeachingThisCourse && (
+            <Form
+              name="basic"
+              layout="vertical"
+              initialValues={{ remember: true, grade: '' }}
+              onFinish={handleSubmit}
+              className="my-8"
+            >
+              <div className="flex items-center gap-2">
+                <Form.Item
+                  label="Grade"
+                  name="grade"
+                  rules={[
+                    { required: true, message: 'Please assign as grade.' },
                   ]}
-                />
-              </Form.Item>
-              <Form.Item label=" ">
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="bg-blue-400 text-white "
-                  block
-                  size="large"
                 >
-                  Submit
-                </Button>
-              </Form.Item>
-            </div>
-          </Form>
+                  <Select
+                    // defaultValue=""
+                    placeholder="Grade"
+                    size="large"
+                    aria-required
+                    style={{ width: 120 }}
+                    options={[
+                      { value: 'A', label: 'A' },
+                      { value: 'B', label: 'B' },
+                      { value: 'C', label: 'C' },
+                      { value: 'D', label: 'D' },
+                      { value: 'E', label: 'E' },
+                      { value: 'F', label: 'F' },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item label=" ">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="bg-blue-400 text-white "
+                    block
+                    size="large"
+                  >
+                    Submit
+                  </Button>
+                </Form.Item>
+              </div>
+            </Form>
+          )
         ))}
     </div>
   );
