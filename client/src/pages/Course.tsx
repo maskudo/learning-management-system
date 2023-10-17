@@ -10,6 +10,7 @@ import { useQuery } from '@apollo/client';
 import { Tabs } from 'antd';
 import { useParams } from 'react-router-dom';
 import Submissions from './Submissions';
+import Resources from '@/components/course/Resources';
 
 export default function Course() {
   const { id } = useParams();
@@ -33,6 +34,11 @@ export default function Course() {
                 label: 'Course',
                 key: '1',
                 children: <About info={course} />,
+              },
+              {
+                label: 'Resources',
+                key: '7',
+                children: <Resources courseId={course.id} />,
               },
               {
                 label: 'Classes',

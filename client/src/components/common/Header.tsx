@@ -1,7 +1,7 @@
 import { companyLogo } from '@/constants/images';
 import { useUserContext } from '@/context/userContext';
 import { Dropdown, MenuProps } from 'antd';
-import { FaRegUser } from 'react-icons/fa';
+import { FaArrowRightFromBracket, FaRegUser } from 'react-icons/fa6';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 const navItems = [
   {
@@ -17,26 +17,27 @@ const navItems = [
     to: 'schedule',
   },
 ];
-const items: MenuProps['items'] = [
-  {
-    key: '1',
-    label: <Link to="/profile">Profile</Link>,
-  },
-  {
-    key: '2',
-    label: <div>Logout</div>,
-  },
-];
+const itemsBuilder = (name) => {
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <Link to="/profile">{name}</Link>,
+    },
+    {
+      key: '2',
+      label: <div>Logout</div>,
+    },
+  ];
+  return items;
+};
 
 export default function Header() {
   const navigate = useNavigate();
   const { setUser, user } = useUserContext();
-  const onClick = ({ key }) => {
-    if (key === '2') {
-      localStorage.clear();
-      setUser(null);
-      navigate('/login');
-    }
+  const onClick = () => {
+    localStorage.clear();
+    setUser(null);
+    navigate('/login');
   };
   return (
     <header className="shadow px-20">
@@ -71,11 +72,13 @@ export default function Header() {
           </ul>
         </div>
         <ul className="right flex gap-6 items-center">
-          <li className=" rounded ">{user?.name}</li>
-          <li className=" rounded ">
-            <Dropdown menu={{ items, onClick }} placement="bottomRight" arrow>
-              <FaRegUser className="w-8 h-8" />
-            </Dropdown>
+          <li className="flex flex-col items-center">
+            <Link to="/profile">
+              <FaRegUser className="w-8 h-8" />{' '}
+            </Link>
+          </li>
+          <li onClick={onClick}>
+            <FaArrowRightFromBracket className="w-8 h-8" />
           </li>
         </ul>
       </nav>

@@ -54,3 +54,9 @@ export const SUBMIT_GRADE = gql`
     submitGrade(submittedGrade: $submittedGrade)
   }
 `;
+
+export const SUBMIT_RESOURCES = gql`
+  mutation submitResources($resources: ResourceInput!) {
+    submitResources(resources: $resources)
+  }
+`;

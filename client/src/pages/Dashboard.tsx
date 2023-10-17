@@ -17,7 +17,8 @@ export default function Dashboard() {
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div className="flex flex-col gap-6">
-          <h2 className="text-2xl">Due Assignments</h2>
+          <h2 className="text-4xl">Welcome {user?.name}</h2>
+          <h2 className="text-2xl">Your Due Assignments</h2>
           <div className="flex flex-col gap-4">
             {!assignments.length ? (
               <p>No Assignments Due :) </p>

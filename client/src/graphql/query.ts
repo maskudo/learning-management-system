@@ -226,3 +226,13 @@ export const GET_SUBMITTED_ASSIGNMENT = gql`
     }
   }
 `;
+
+export const GET_RESOURCES_BY_COURSE = gql`
+  query getResources($courseId: Int!) {
+    getResourcesByCourse(courseId: $courseId) {
+      id
+      title
+      description
+    }
+  }
+`;

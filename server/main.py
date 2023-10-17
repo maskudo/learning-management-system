@@ -23,6 +23,7 @@ from mygraphql.resolvers.classes import classQuery, classMutate
 from mygraphql.resolvers.assignment import assignmentQuery, assignmentMutate
 from mygraphql.resolvers.question import questionQuery, questionMutate
 from mygraphql.resolvers.submission import submissionQuery, submissionMutate
+from mygraphql.resolvers.resource import resourceQuery, resourceMutate
 
 datetime_scalar = ScalarType("Datetime")
 
@@ -54,6 +55,8 @@ schema = make_executable_schema(
     questionMutate,
     submissionQuery,
     submissionMutate,
+    resourceQuery,
+    resourceMutate,
 )
 middleware = [
     Middleware(

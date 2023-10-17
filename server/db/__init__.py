@@ -15,6 +15,7 @@ from models import (
     Question,
     Submission,
     User,
+    Resource,
 )
 
 

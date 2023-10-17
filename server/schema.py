@@ -50,6 +50,7 @@ type_defs = gql(
         description: String
         created_at : Datetime!
         category: Category!
+        resources: [Resource]!
     }
 
     type Enrollment {
@@ -126,7 +127,12 @@ type_defs = gql(
         option: QuestionOption
     }
 
-
+    type Resource {
+        id: Int!
+        title: String!
+        description: String!
+        course_id: Int!
+    }
 
     input AddClassInput {
         title: String!
@@ -237,6 +243,15 @@ type_defs = gql(
         submittedAssignmentId: Int!
         grade: GradeLetter!
     }
+    input ResourceInfo {
+        title: String!
+        description: String!
+
+    }
+    input ResourceInput {
+        course_id: Int!
+        resources: [ResourceInfo!]!
+    }
     
     type Mutation {
         register(user: AddUserInput!): User 
@@ -258,6 +273,7 @@ type_defs = gql(
         addSubmittedOption(submittedOptionInfo: AddSubmittedOptionInput!): SubmittedOption
         submitAssignment(submittedAssignment: SubmittedAssignmentInput!): Boolean
         submitGrade(submittedGrade: SubmitGradeInput!): Boolean
+        submitResources(resources: ResourceInput!): Boolean
     }
 
     type Query {
@@ -287,6 +303,7 @@ type_defs = gql(
         getSubmittedOption(submittedOptionId: Int!): SubmittedOption
         getSubmittedAssignmentsByCourse(courseId: Int!): [SubmittedAssignment!]
         getSubmittedAssignment(submittedAssignmentId: Int!): SubmittedAssignment!
+        getResourcesByCourse(courseId: Int!): [Resource]
     }
 """
 )

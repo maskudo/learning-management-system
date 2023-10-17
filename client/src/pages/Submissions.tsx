@@ -45,7 +45,6 @@ export default function Submissions({ courseId }) {
     grade: item?.grade?.grade ?? '-',
     key: item?.id,
   }));
-  console.log(assignments);
 
   return (
     <div className="submissions">

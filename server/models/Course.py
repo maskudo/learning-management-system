@@ -14,6 +14,7 @@ class Course(Base):
     created_at = Column(Date, default=date.today)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
     category = relationship("Category", cascade="delete, merge, save-update")
+    resources = relationship("Resource", cascade="delete, merge, save-update")
 
     def __init__(
         self,
