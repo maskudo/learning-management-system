@@ -48,3 +48,9 @@ export const ADD_ASSIGNMENT = gql`
     }
   }
 `;
+
+export const SUBMIT_GRADE = gql`
+  mutation submitGrade($submittedGrade: SubmitGradeInput!) {
+    submitGrade(submittedGrade: $submittedGrade)
+  }
+`;

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(localizedFormat);
 import { useQuery } from '@apollo/client';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 
 const columns = [
@@ -15,6 +15,11 @@ const columns = [
   {
     title: 'Student',
     dataIndex: 'student',
+    render: (text: string) => <div className="capitalize">{text}</div>,
+  },
+  {
+    title: 'Grade',
+    dataIndex: 'grade',
     render: (text: string) => <div className="capitalize">{text}</div>,
   },
   {
@@ -37,6 +42,7 @@ export default function Submissions({ courseId }) {
     assignment: item?.assignment?.name,
     student: item?.student?.name,
     id: item?.id,
+    grade: item?.grade?.grade ?? '-',
     key: item?.id,
   }));
   console.log(assignments);

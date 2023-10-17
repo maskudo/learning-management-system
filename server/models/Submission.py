@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from models import Base
 
@@ -13,6 +13,7 @@ class SubmittedAssignment(Base):
     assignment = relationship("Assignment")
     student = relationship("User")
     submissions = relationship("Submission")
+    grade = relationship("Grade", uselist=False)
 
     def __init__(
         self,
@@ -66,3 +67,20 @@ class SubmittedOption(Base):
 
     def __repr__(self) -> str:
         return f"SubmittedOption(id='{self.id}', submission_id='{self.submission_id}', option_id='{self.option_id})"
+
+
+class Grade(Base):
+    __tablename__ = "grades"
+    id = Column(Integer, primary_key=True)
+    submitted_assignment_id = Column(Integer, ForeignKey("submitted_assignments.id"))
+    grade = Column(
+        Enum("A", "B", "C", "D", "E", "F", name="grade_enum", create_type=False),
+        nullable=False,
+    )
+
+    def __init__(self, submitted_assignment_id: int, grade: str):
+        self.submitted_assignment_id = submitted_assignment_id
+        self.grade = grade
+
+    def __repr__(self) -> str:
+        return f"Grade(grade='{self.grade}')"

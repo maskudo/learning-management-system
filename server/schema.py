@@ -12,6 +12,14 @@ type_defs = gql(
         multiple_choice
         essay
     }
+    enum GradeLetter {
+        A
+        B
+        C
+        D
+        E
+        F
+    }
     type Error {
         status: Int!
         message: String!
@@ -91,6 +99,11 @@ type_defs = gql(
         is_correct: Boolean!
     }
 
+    type Grade {
+        id: Int!
+        grade: GradeLetter!
+    }
+
     type Submission {
         id: Int!
         assignment: Assignment!
@@ -103,6 +116,7 @@ type_defs = gql(
     type SubmittedAssignment {
         id: Int!
         student: User!
+        grade: Grade
         assignment: Assignment!
         submissions: [Submission!]
     }
@@ -219,6 +233,10 @@ type_defs = gql(
         student_id: Int!
         solutions : [QuestionAnswerInput]
     }
+    input SubmitGradeInput{
+        submittedAssignmentId: Int!
+        grade: GradeLetter!
+    }
     
     type Mutation {
         register(user: AddUserInput!): User 
@@ -239,6 +257,7 @@ type_defs = gql(
         addSubmission(submissionInfo: AddSubmissionInput!): Submission
         addSubmittedOption(submittedOptionInfo: AddSubmittedOptionInput!): SubmittedOption
         submitAssignment(submittedAssignment: SubmittedAssignmentInput!): Boolean
+        submitGrade(submittedGrade: SubmitGradeInput!): Boolean
     }
 
     type Query {

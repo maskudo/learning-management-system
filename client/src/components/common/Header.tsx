@@ -1,7 +1,7 @@
 import { companyLogo } from '@/constants/images';
 import { useUserContext } from '@/context/userContext';
 import { Dropdown, MenuProps } from 'antd';
-import { FaRegBell, FaRegUser } from 'react-icons/fa';
+import { FaRegUser } from 'react-icons/fa';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 const navItems = [
   {

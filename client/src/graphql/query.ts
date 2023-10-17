@@ -185,6 +185,9 @@ export const GET_SUBMITTED_ASSIGNMENTS_BY_COURSE = gql`
       student {
         name
       }
+      grade {
+        grade
+      }
       assignment {
         name
       }
@@ -195,6 +198,7 @@ export const GET_SUBMITTED_ASSIGNMENTS_BY_COURSE = gql`
 export const GET_SUBMITTED_ASSIGNMENT = gql`
   query getSubmittedAssignment($submittedAssignmentId: Int!) {
     getSubmittedAssignment(submittedAssignmentId: $submittedAssignmentId) {
+      id
       assignment {
         name
       }
@@ -202,7 +206,11 @@ export const GET_SUBMITTED_ASSIGNMENT = gql`
         id
         name
       }
+      grade {
+        grade
+      }
       submissions {
+        id
         question {
           question_text
         }

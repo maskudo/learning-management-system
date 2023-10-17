@@ -2,7 +2,7 @@ from ariadne import ObjectType, QueryType
 from ariadne.exceptions import HttpError
 from sqlalchemy import and_
 from models.Assignment import Assignment
-from models.Submission import Submission, SubmittedAssignment, SubmittedOption
+from models.Submission import Grade, Submission, SubmittedAssignment, SubmittedOption
 
 from db import session
 
@@ -88,3 +88,18 @@ def resolve_submitted_assignments_by_course(*_, courseId):
 def resolve_submitted_assignments(*_, submittedAssignmentId):
     submission = session.query(SubmittedAssignment).get(submittedAssignmentId)
     return submission
+
+
+@submissionMutate.field("submitGrade")
+def resolve_submit_grade(*_, submittedGrade):
+    already_submitted = (
+        session.query(Grade)
+        .where(Grade.submitted_assignment_id == submittedGrade["submittedAssignmentId"])
+        .first()
+    )
+    if already_submitted:
+        return HttpError("Grade Already Submitted")
+    grade = Grade(submittedGrade["submittedAssignmentId"], submittedGrade["grade"])
+    session.add(grade)
+    session.commit()
+    return True

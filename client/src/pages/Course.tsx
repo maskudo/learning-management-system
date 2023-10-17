@@ -1,7 +1,6 @@
 import {
   About,
   Classes,
-  Grades,
   Participants,
   Teachers,
   Assignments,
@@ -62,12 +61,6 @@ export default function Course() {
                 label: 'Submissions',
                 key: '5',
                 children: <Submissions courseId={course.id} />,
-                // disabled: getUserByEmail.role === 'student',
-              },
-              {
-                label: 'Grades',
-                key: '7',
-                children: <Grades />,
                 // disabled: getUserByEmail.role === 'student',
               },
             ]}
