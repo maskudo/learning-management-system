@@ -36,7 +36,6 @@ export default function CreateResources({ courseId, refetchResources }) {
   };
   return (
     <Space direction="vertical" className="w-full">
-      <h3 className="text-2xl">Create Resource</h3>
       <Form
         className=" m-auto"
         layout="vertical"

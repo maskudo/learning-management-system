@@ -46,11 +46,7 @@ export default function Assignments({ courseId }) {
       {!loading && !error && (
         <div>
           {isTeachingThisCourse && <CreateAssignment courseId={courseId} />}
-          {!assignments?.length ? (
-            <div>No Assignments yet...</div>
-          ) : (
-            <Table columns={columns} dataSource={assignments} />
-          )}
+          <Table columns={columns} dataSource={assignments} />
         </div>
       )}
     </div>

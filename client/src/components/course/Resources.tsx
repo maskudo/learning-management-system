@@ -43,7 +43,11 @@ export default function Resources({ courseId }) {
         {error && <div>{error.message}</div>}
         {!loading && !error && (
           <div>
-            <Collapse items={items} />
+            {items?.length ? (
+              <Collapse items={items} />
+            ) : (
+              <div>No resources for this course yet.</div>
+            )}
           </div>
         )}
       </div>

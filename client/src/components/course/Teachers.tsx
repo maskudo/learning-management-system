@@ -32,11 +32,7 @@ export default function Teachers({ courseId }) {
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div>
-          {!users?.length ? (
-            <div> No teachers yet</div>
-          ) : (
-            <Table columns={columns} dataSource={users} />
-          )}
+          <Table columns={columns} dataSource={users} />
         </div>
       )}
     </div>

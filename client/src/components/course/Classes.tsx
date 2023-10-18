@@ -57,12 +57,7 @@ export default function Classes({ courseInfo }) {
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div>
-          <h3 className="text-2xl">All Classes</h3>
-          {!classes?.length ? (
-            <div> No classes yet</div>
-          ) : (
-            <Table columns={columns} dataSource={classes} />
-          )}
+          <Table columns={columns} dataSource={classes} />
         </div>
       )}
     </div>

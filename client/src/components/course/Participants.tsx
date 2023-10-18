@@ -31,11 +31,7 @@ export default function Participants({ courseId }) {
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div>
-          {!users?.length ? (
-            <div> No participants yet...</div>
-          ) : (
-            <Table columns={columns} dataSource={users} />
-          )}
+          <Table columns={columns} dataSource={users} />
         </div>
       )}
     </div>
