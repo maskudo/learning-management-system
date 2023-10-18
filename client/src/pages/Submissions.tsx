@@ -36,6 +36,7 @@ export default function Submissions({ courseId }) {
       variables: {
         courseId,
       },
+      fetchPolicy: 'network-only',
     }
   );
   const assignments = data?.getSubmittedAssignmentsByCourse?.map((item) => ({

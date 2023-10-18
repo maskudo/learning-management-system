@@ -51,7 +51,7 @@ export default function Assignment() {
     } catch (e) {
       message.error(e.message);
     }
-    navigate('/');
+    navigate(-1);
   };
   const teachingCourses = user?.teaching?.map((course) => course.course.id);
   const isTeachingThisCourse = teachingCourses?.includes(parseInt(id));

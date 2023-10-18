@@ -6,7 +6,6 @@ export default function Dashboard() {
   const { user } = useUserContext();
   const { data, error, loading } = useAssignmentsQuery();
   const assignments = data ?? [];
-  console.log(assignments, data);
   return (
     <div className="dashboard">
       {loading && <div>Loading... </div>}

@@ -5,7 +5,7 @@ import { SUBMIT_RESOURCES } from '@/graphql/mutations';
 import { useRef } from 'react';
 import TextArea from 'antd/es/input/TextArea';
 
-export default function CreateResources({ courseId }) {
+export default function CreateResources({ courseId, refetchResources }) {
   const [submitResources] = useMutation(SUBMIT_RESOURCES);
   const formRef = useRef<FormInstance>(null);
 
@@ -25,6 +25,7 @@ export default function CreateResources({ courseId }) {
       });
       if (data?.data?.submitResources) {
         message.success('Resources Submitted Successfully');
+        refetchResources();
         formRef?.current?.resetFields();
       } else {
         message.error('Failed to submit resources');

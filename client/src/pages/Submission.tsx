@@ -13,6 +13,7 @@ export default function Submission() {
     variables: {
       submittedAssignmentId: parseInt(submission),
     },
+    fetchPolicy: 'network-only',
   });
   const [submitGrade] = useMutation(SUBMIT_GRADE);
   const handleSubmit = async (values) => {

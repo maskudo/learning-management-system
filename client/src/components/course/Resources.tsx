@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import CreateResources from './CreateResources';
 import { GET_RESOURCES_BY_COURSE } from '@/graphql/query';
 import { Collapse } from 'antd';
@@ -6,7 +6,8 @@ import { useUserContext } from '@/context/userContext';
 
 export default function Resources({ courseId }) {
   const { user } = useUserContext();
-  const { data, error, loading } = useQuery(GET_RESOURCES_BY_COURSE, {
+  const client = useApolloClient();
+  const { data, error, loading, refetch } = useQuery(GET_RESOURCES_BY_COURSE, {
     variables: {
       courseId,
     },
@@ -16,12 +17,26 @@ export default function Resources({ courseId }) {
     label: item.title,
     children: <p> {item.description}</p>,
   }));
+  const refetchResources = () => {
+    refetch().then((data) => {
+      client.writeQuery({
+        query: GET_RESOURCES_BY_COURSE,
+        data: data.data,
+        variables: {
+          courseId,
+        },
+      });
+    });
+  };
   const teachingCourses = user?.teaching?.map((course) => course.course.id);
   const isTeachingThisCourse = teachingCourses?.includes(parseInt(courseId));
   return (
     <div>
       {(isTeachingThisCourse || user?.role?.toLowerCase() === 'admin') && (
-        <CreateResources courseId={courseId} />
+        <CreateResources
+          courseId={courseId}
+          refetchResources={refetchResources}
+        />
       )}
       <div className="resources">
         {loading && <div>Loading... </div>}

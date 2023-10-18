@@ -28,7 +28,7 @@ const columns = [
 export default function Assignments({ courseId }) {
   const { user } = useUserContext();
   const { data, error, loading } = useAssignmentsQuery();
-  let assignments = data.filter(
+  let assignments = data?.filter(
     (assignment) => assignment?.course?.id === courseId
   );
   assignments =
