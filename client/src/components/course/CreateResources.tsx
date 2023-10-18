@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { SUBMIT_RESOURCES } from '@/graphql/mutations';
 import { useRef } from 'react';
 import TextArea from 'antd/es/input/TextArea';
+import { FaXmark } from 'react-icons/fa6';
 
 export default function CreateResources({ courseId, refetchResources }) {
   const [submitResources] = useMutation(SUBMIT_RESOURCES);
@@ -49,8 +50,12 @@ export default function CreateResources({ courseId, refetchResources }) {
               {fields.map(({ key, name, ...restField }) => (
                 <Space
                   key={key}
-                  className="flex flex-col items-start  w-full items-stretch"
+                  className="flex flex-col w-full items-stretch p-4 border border-gray-200 rounded-lg mb-2 relative"
                 >
+                  <FaXmark
+                    onClick={() => remove(name)}
+                    className="absolute right-4 w-6 h-6 hover:text-red-600 text-red-400"
+                  />
                   <div className="flex gap-4 ">
                     <Form.Item
                       {...restField}
@@ -67,7 +72,6 @@ export default function CreateResources({ courseId, refetchResources }) {
                         className="lg:w-[30vw] md:w-[50vw] sm:w-[70vw]"
                       />
                     </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
                   </div>
                   <Form.Item
                     {...restField}

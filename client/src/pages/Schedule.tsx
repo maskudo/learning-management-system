@@ -33,17 +33,23 @@ export default function Schedule() {
     <div className="schedule flex flex-col gap-12">
       {user?.role !== 'student' && (
         <div>
-          <h2 className="text-2xl">Teaching Classes</h2>
+          <h2 className="text-2xl font-semibold pb-4">Teaching Classes</h2>
           <ScheduleTable
             loading={teachingData?.data?.loading}
             error={teachingData?.data?.error}
             classes={teachingClasses}
+            emptyMessage="No classes to take."
           />
         </div>
       )}
       <div>
-        <h2 className="text-2xl">Upcoming Classes</h2>
-        <ScheduleTable loading={loading} error={error} classes={classes} />
+        <h2 className="text-2xl font-semibold pb-4">Upcoming Classes</h2>
+        <ScheduleTable
+          loading={loading}
+          error={error}
+          classes={classes}
+          emptyMessage="No upcoming classes."
+        />
       </div>
     </div>
   );

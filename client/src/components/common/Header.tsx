@@ -1,10 +1,11 @@
 import { companyLogo } from '@/constants/images';
 import { useUserContext } from '@/context/userContext';
+import { useApolloClient } from '@apollo/client';
 import { FaArrowRightFromBracket, FaRegUser } from 'react-icons/fa6';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 const navItems = [
   {
-    name: 'Dashboard',
+    name: 'Home',
     to: '/',
   },
   {
@@ -19,9 +20,11 @@ const navItems = [
 
 export default function Header() {
   const navigate = useNavigate();
+  const client = useApolloClient();
   const { setUser } = useUserContext();
   const onClick = () => {
     localStorage.clear();
+    client.resetStore();
     setUser(null);
     navigate('/login');
   };

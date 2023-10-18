@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from '@apollo/client';
 import CreateResources from './CreateResources';
 import { GET_RESOURCES_BY_COURSE } from '@/graphql/query';
-import { Collapse } from 'antd';
+import { Collapse, Empty } from 'antd';
 import { useUserContext } from '@/context/userContext';
 
 export default function Resources({ courseId }) {
@@ -42,11 +42,16 @@ export default function Resources({ courseId }) {
         {loading && <div>Loading... </div>}
         {error && <div>{error.message}</div>}
         {!loading && !error && (
-          <div>
+          <div className="flex flex-col gap-4 min-h-[30vh]">
             {items?.length ? (
               <Collapse items={items} />
             ) : (
-              <div>No resources for this course yet.</div>
+              <Empty
+                className="h-full border p-4"
+                description={
+                  <div className="text-gray-600"> No resources available.</div>
+                }
+              />
             )}
           </div>
         )}

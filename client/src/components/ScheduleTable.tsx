@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(localizedFormat);
 
-import { Table } from 'antd';
+import { Empty, Table } from 'antd';
 const columns = [
   {
     title: 'Title',
@@ -25,18 +25,32 @@ const columns = [
     render: (text: string) => <div>{dayjs(text).format('LLLL')}</div>,
   },
 ];
-export default function ScheduleTable({ loading, error, classes }) {
+export default function ScheduleTable({
+  loading,
+  error,
+  classes,
+  emptyMessage,
+}) {
   return (
-    <div className="schedule-table">
+    <div className="schedule-table ">
       {loading && <div>Loading... </div>}
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div className="classes">
           <div>
             {!classes?.length ? (
-              <div> No classes yet</div>
+              <Empty
+                className="h-full border p-4 shadow-md"
+                description={
+                  <div className="text-gray-600">{emptyMessage}</div>
+                }
+              />
             ) : (
-              <Table columns={columns} dataSource={classes} />
+              <Table
+                columns={columns}
+                dataSource={classes}
+                className="shadow-lg"
+              />
             )}
           </div>
         </div>

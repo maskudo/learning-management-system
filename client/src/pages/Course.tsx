@@ -26,7 +26,7 @@ export default function Course() {
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <>
-          <h2 className="text-3xl">{course.name}</h2>
+          <h2 className="text-3xl font-semibold">{course.name}</h2>
           <Tabs
             defaultActiveKey="1"
             items={[

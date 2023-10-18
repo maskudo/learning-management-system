@@ -1,7 +1,7 @@
 import { GET_SUBMITTED_ASSIGNMENT } from '@/graphql/query';
 import { useMutation, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { FaCheck, FaPenNib, FaXmark } from 'react-icons/fa6';
+import { FaCheck, FaPenNib, FaPencil, FaXmark } from 'react-icons/fa6';
 import { Button, Form, Select, message } from 'antd';
 import { SUBMIT_GRADE } from '@/graphql/mutations';
 import { useUserContext } from '@/context/userContext';
@@ -40,10 +40,10 @@ export default function Submission() {
       {error && <div>{error.message}</div>}
       {!loading && !error && (
         <div className="header pb-6">
-          <h2 className="text-2xl">
-            Assignment: {data?.getSubmittedAssignment?.assignment?.name}
+          <h2 className=" text-2xl ">
+            {data?.getSubmittedAssignment?.assignment?.name}
           </h2>
-          <h2 className="text-xl">
+          <h2 className="text-xl  ">
             By {data?.getSubmittedAssignment?.student?.name}
           </h2>
         </div>
@@ -51,12 +51,15 @@ export default function Submission() {
       <div className="submitted-answers flex flex-col gap-4">
         {data?.getSubmittedAssignment?.submissions?.map((submission, index) => {
           return (
-            <div key={submission.id} className="flex flex-col gap-1">
+            <div
+              key={submission.id}
+              className="flex flex-col gap-1 border p-2 rounded-md bg-gray-100"
+            >
               <p>
                 {index + 1}. {submission?.question?.question_text}
               </p>
               <div className="flex gap-2 items-center">
-                <FaPenNib className="w-4 h-4" />
+                <FaPencil className="w-4 h-4" />
                 {!submission?.submitted_option ? (
                   <div>{submission.submission_text}</div>
                 ) : (
@@ -64,7 +67,7 @@ export default function Submission() {
                     <div>{submission.submitted_option.option.option_text} </div>
                     <div>
                       {submission?.submitted_option.option?.is_correct ? (
-                        <FaCheck className="w-4 h-4 text-green-400" />
+                        <FaCheck className="w-4 h-4 text-green-600" />
                       ) : (
                         <FaXmark className="w-4 h-4 text-red-400" />
                       )}{' '}
@@ -79,7 +82,9 @@ export default function Submission() {
       {!loading &&
         !error &&
         (grade ? (
-          <div className="my-8">Grade: {grade}</div>
+          <div className="my-8  text-3xl">
+            Grade: <span className=" text-5xl">{grade}</span>
+          </div>
         ) : (
           isTeachingThisCourse && (
             <Form

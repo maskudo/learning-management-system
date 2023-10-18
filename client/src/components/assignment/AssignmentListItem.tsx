@@ -5,7 +5,7 @@ export default function AssignmentListItem({ assignment }) {
     'dddd, DD MMMM [at] HH:mm'
   );
   return (
-    <div className="assignmentItem flex justify-between shadow py-4 px-2">
+    <div className="assignmentItem flex justify-between border rounded-md hover:bg-gray-200 bg-gray-50 shadow-sm py-4 px-2 ">
       <div className="left flex flex-col">
         <Link
           to={`/courses/${assignment.course.id}/assignment/${assignment.id}`}

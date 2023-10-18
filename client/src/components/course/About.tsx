@@ -35,27 +35,32 @@ export default function About({ info }) {
   return (
     <div className="info flex flex-col gap-4 ">
       <div className="description">
-        <h3 className="text-2xl">Description</h3>
-        <p className="text-justify text-[1rem]">{info.description}</p>
-      </div>
-      <div className="abstract ">
-        <h3 className="text-2xl">Abstract</h3>
-        <p className="text-justify text-[1rem]">{info.abstract}</p>
+        <h3 className="text-2xl font-semibold text-gray-900">Description</h3>
+        <div className="text-gray-600 py-2">
+          <p className="text-justify text-[1rem]">{info.description}</p>
+          <p>---</p>
+          <p className="text-justify text-[1rem]">{info.abstract}</p>
+        </div>
       </div>
       {!isTeachingThisCourse && (
         <div className="buttons flex gap-4 ">
           <Button
             type="primary"
-            className="bg-blue-600 hover:bg-blue-200  w-full"
+            className="bg-blue-500 hover:bg-blue-200  w-5/12 font-semibold"
             size="large"
             onClick={handleEnrollment}
             disabled={disableButton}
           >
             Enroll
           </Button>
-          <Button type="primary" danger={true} size="large" className=" w-full">
-            Cancel Enrollment
-          </Button>
+          {/* <Button */}
+          {/*   type="primary" */}
+          {/*   danger={true} */}
+          {/*   size="large" */}
+          {/*   className=" w-full font-semibold" */}
+          {/* > */}
+          {/*   Cancel Enrollment */}
+          {/* </Button> */}
         </div>
       )}
     </div>

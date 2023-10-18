@@ -10,7 +10,7 @@ const CourseCard: React.FC = ({ course }) => {
   const handleClick = () => navigate(`${course.id}`);
   return (
     <Card
-      className=""
+      className="hover:shadow-lg"
       onClick={handleClick}
       cover={<img alt="course-cover" src={course.image ?? courseImage} />}
     >

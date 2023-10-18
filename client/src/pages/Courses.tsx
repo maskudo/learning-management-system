@@ -25,7 +25,7 @@ export default function Courses() {
       {!!loading && <div>Loading...</div>}
       {!error && !loading && (
         <div className="courses-container">
-          <h2 className="text-2xl pb-3">Courses</h2>
+          <h2 className="pb-3 text-3xl font-semibold">Courses</h2>
           <Tabs
             defaultActiveKey="1"
             items={[
