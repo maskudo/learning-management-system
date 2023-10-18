@@ -1,15 +1,15 @@
 import { GET_ASSIGNMENT } from '@/graphql/query';
-import { useApolloClient, useMutation, useQuery } from '@apollo/client';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Radio, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { SUBMIT_ASSIGNMENT } from '@/graphql/mutations';
 import { useUserContext } from '@/context/userContext';
+import useAssignmentsQuery from '@/hooks/useAssignmentsQuery';
 
 export default function Assignment() {
   const navigate = useNavigate();
-
-  const client = useApolloClient();
+  const { refetchAssignments } = useAssignmentsQuery();
   const { user } = useUserContext();
   const [submitAssignment] = useMutation(SUBMIT_ASSIGNMENT);
   const { assignment, id } = useParams();
@@ -46,10 +46,7 @@ export default function Assignment() {
       });
       if (data?.submitAssignment) {
         message.success('Successfully submitted the assignment.');
-        await client.refetchQueries([
-          'getAssignmentByCourseUser',
-          'getAssignmentsByUser',
-        ]);
+        refetchAssignments();
       }
     } catch (e) {
       message.error(e.message);

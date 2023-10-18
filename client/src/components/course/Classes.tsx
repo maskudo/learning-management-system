@@ -1,4 +1,4 @@
-import { GET_CLASSES_BY_COURSE, GET_USER_BY_EMAIL } from '@/graphql/query';
+import { GET_CLASSES_BY_COURSE } from '@/graphql/query';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(localizedFormat);

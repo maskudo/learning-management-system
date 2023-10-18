@@ -1,4 +1,4 @@
-import { GET_ENROLLMENTS_BY_COURSE, GET_USERS } from '@/graphql/query';
+import { GET_ENROLLMENTS_BY_COURSE } from '@/graphql/query';
 import { useQuery } from '@apollo/client';
 import { Table } from 'antd';
 

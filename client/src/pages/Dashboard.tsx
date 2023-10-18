@@ -1,16 +1,12 @@
 import AssignmentListItem from '@/components/assignment/AssignmentListItem';
 import { useUserContext } from '@/context/userContext';
-import { GET_ASSIGNMENTS_BY_USER } from '@/graphql/query';
-import { useQuery } from '@apollo/client';
+import useAssignmentsQuery from '@/hooks/useAssignmentsQuery';
 
 export default function Dashboard() {
   const { user } = useUserContext();
-  const { data, error, loading } = useQuery(GET_ASSIGNMENTS_BY_USER, {
-    variables: {
-      userId: user?.id,
-    },
-  });
-  const assignments = data?.getAssignmentsByUser ?? [];
+  const { data, error, loading } = useAssignmentsQuery();
+  const assignments = data ?? [];
+  console.log(assignments, data);
   return (
     <div className="dashboard">
       {loading && <div>Loading... </div>}

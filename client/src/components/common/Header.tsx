@@ -1,6 +1,5 @@
 import { companyLogo } from '@/constants/images';
 import { useUserContext } from '@/context/userContext';
-import { Dropdown, MenuProps } from 'antd';
 import { FaArrowRightFromBracket, FaRegUser } from 'react-icons/fa6';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 const navItems = [
@@ -17,23 +16,10 @@ const navItems = [
     to: 'schedule',
   },
 ];
-const itemsBuilder = (name) => {
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: <Link to="/profile">{name}</Link>,
-    },
-    {
-      key: '2',
-      label: <div>Logout</div>,
-    },
-  ];
-  return items;
-};
 
 export default function Header() {
   const navigate = useNavigate();
-  const { setUser, user } = useUserContext();
+  const { setUser } = useUserContext();
   const onClick = () => {
     localStorage.clear();
     setUser(null);

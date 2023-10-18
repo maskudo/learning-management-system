@@ -1,10 +1,9 @@
-import { GET_ASSIGNMENTS_BY_COURSE_USER } from '@/graphql/query';
 import dayjs from 'dayjs';
-import { useQuery } from '@apollo/client';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
 import { useUserContext } from '@/context/userContext';
 import CreateAssignment from '../assignment/CreateAssignment';
+import useAssignmentsQuery from '@/hooks/useAssignmentsQuery';
 const columns = [
   {
     title: 'Name',
@@ -28,14 +27,12 @@ const columns = [
 
 export default function Assignments({ courseId }) {
   const { user } = useUserContext();
-  const { data, error, loading } = useQuery(GET_ASSIGNMENTS_BY_COURSE_USER, {
-    variables: {
-      courseId,
-      userId: user.id,
-    },
-  });
-  const assignments =
-    data?.getAssignmentsByCourseUser?.map((elem) => ({
+  const { data, error, loading } = useAssignmentsQuery();
+  let assignments = data.filter(
+    (assignment) => assignment?.course?.id === courseId
+  );
+  assignments =
+    assignments?.map((elem) => ({
       ...elem,
       key: elem.id,
     })) ?? [];
