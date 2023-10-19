@@ -1,7 +1,6 @@
 import AssignmentListItem from '@/components/assignment/AssignmentListItem';
 import { useUserContext } from '@/context/userContext';
 import useAssignmentsQuery from '@/hooks/useAssignmentsQuery';
-import { Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
@@ -19,9 +18,9 @@ export default function Dashboard() {
             Welcome back, <br /> {user?.name}
           </h2>
           <h3 className="font-thin text-2xl ">Overview</h3>
-          <div className="overview flex gap-2">
+          <div className="overview gap-2 grid grid-cols-2">
             <div
-              className="px-2 border-2 shadow-md w-full h-[10rem] flex justify-around flex-col font-thin text-3xl rounded-md hover:bg-gray-200 bg-gray-50"
+              className="px-2 border-2 shadow-md  h-[10rem] flex justify-around flex-col font-thin text-3xl rounded-md hover:bg-gray-200 bg-gray-50"
               onClick={() => navigate('courses')}
             >
               <div>Active Courses</div>
@@ -29,12 +28,20 @@ export default function Dashboard() {
                 {user?.enrollments?.length}
               </div>
             </div>
-            <div className="px-2 border-2 shadow-md w-full h-[10rem] flex justify-around flex-col font-thin text-3xl rounded-md hover:bg-gray-200 bg-gray-50">
+            <div className="px-2 border-2 shadow-md  h-[10rem] flex justify-around flex-col font-thin text-3xl rounded-md hover:bg-gray-200 bg-gray-50">
               <div>Assignments Due</div>
               <div className="text-6xl font-bold text-gray-700">
                 {data?.length}
               </div>
             </div>
+            {user?.role !== 'student' && (
+              <div className="px-2 border-2 shadow-md  h-[10rem] flex justify-around flex-col font-thin text-3xl rounded-md hover:bg-gray-200 bg-gray-50 col-span-full">
+                <div>Teaching courses</div>
+                <div className="text-6xl font-bold text-gray-700">
+                  {user?.teaching?.length}
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex flex-col gap-4 min-h-[30vh]">
             {!!assignments.length && (

@@ -5,6 +5,7 @@ dayjs.extend(localizedFormat);
 import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
+import { useUserContext } from '@/context/userContext';
 
 const columns = [
   {
@@ -30,6 +31,7 @@ const columns = [
 ];
 
 export default function Submissions({ courseId }) {
+  const { user } = useUserContext();
   const { data, error, loading } = useQuery(
     GET_SUBMITTED_ASSIGNMENTS_BY_COURSE,
     {
@@ -39,14 +41,20 @@ export default function Submissions({ courseId }) {
       fetchPolicy: 'network-only',
     }
   );
-  const assignments = data?.getSubmittedAssignmentsByCourse?.map((item) => ({
+  let assignments = data?.getSubmittedAssignmentsByCourse?.map((item) => ({
     assignment: item?.assignment?.name,
     student: item?.student?.name,
     id: item?.id,
     grade: item?.grade?.grade ?? '-',
     key: item?.id,
   }));
-
+  const teachingCourses = user?.teaching?.map((course) => course.course.id);
+  const isTeachingThisCourse = teachingCourses?.includes(parseInt(courseId));
+  if (!isTeachingThisCourse) {
+    assignments = assignments?.filter(
+      (assignment) => assignment?.student === user?.name
+    );
+  }
   return (
     <div className="submissions">
       {loading && <div>Loading... </div>}

@@ -2,7 +2,7 @@ import CourseCard from '@/components/common/CourseCard';
 import { useUserContext } from '@/context/userContext';
 import { GET_COURSES } from '@/graphql/query';
 import { useQuery } from '@apollo/client';
-import { Tabs } from 'antd';
+import { Empty, Tabs } from 'antd';
 
 export default function Courses() {
   const { loading, error, data } = useQuery(GET_COURSES);
@@ -32,12 +32,14 @@ export default function Courses() {
               {
                 label: 'My Courses',
                 key: '1',
-                children: (
+                children: myCourses.length ? (
                   <div className="courses grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
                     {myCourses.map((course) => (
                       <CourseCard key={course.id} course={course} />
                     ))}
                   </div>
+                ) : (
+                  <Empty description="You havent enrolled into any courses yet" />
                 ),
               },
               {

@@ -1,11 +1,13 @@
 import { useUserContext } from '@/context/userContext';
 import { ADD_ENROLLMENT } from '@/graphql/mutations';
+import useAssignmentsQuery from '@/hooks/useAssignmentsQuery';
 import useUserQuery from '@/hooks/useUserQuery';
 import { useMutation } from '@apollo/client';
 import { Button, message } from 'antd';
 
 export default function About({ info }) {
   const [addEnrollment] = useMutation(ADD_ENROLLMENT);
+  const { refetchAssignments } = useAssignmentsQuery();
   const { refetchUser } = useUserQuery();
   const { user } = useUserContext();
   const handleEnrollment = async () => {
@@ -21,6 +23,7 @@ export default function About({ info }) {
       if (data?.addEnrollment?.id) {
         message.success('Successfully Enrolled into the course!');
         refetchUser();
+        refetchAssignments();
       }
     } catch (e) {
       message.error(e.message);

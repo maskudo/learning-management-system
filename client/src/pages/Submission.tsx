@@ -1,6 +1,6 @@
 import { GET_SUBMITTED_ASSIGNMENT } from '@/graphql/query';
 import { useMutation, useQuery } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FaCheck, FaPenNib, FaPencil, FaXmark } from 'react-icons/fa6';
 import { Button, Form, Select, message } from 'antd';
 import { SUBMIT_GRADE } from '@/graphql/mutations';
@@ -16,6 +16,7 @@ export default function Submission() {
     fetchPolicy: 'network-only',
   });
   const [submitGrade] = useMutation(SUBMIT_GRADE);
+  const navigate = useNavigate();
   const handleSubmit = async (values) => {
     try {
       await submitGrade({
@@ -27,6 +28,7 @@ export default function Submission() {
         },
       });
       message.success('Grade submitted successfully!');
+      navigate(-1);
     } catch (e) {
       message.error(e.message);
     }
