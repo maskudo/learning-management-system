@@ -12,10 +12,28 @@ export default function Resources({ courseId }) {
       courseId,
     },
   });
+  console.log(data?.getResourcesByCourse);
   const items = data?.getResourcesByCourse?.map((item) => ({
     key: item.id,
     label: item.title,
-    children: <p> {item.description}</p>,
+    children: (
+      <div>
+        <p>{item.description}</p>
+        <div className="pt-3">
+          <h4 className="text-lg text-orange-600">Attachments: </h4>
+          {item.files?.map((file) => (
+            <a
+              key={file.id}
+              href={import.meta.env.VITE_API_ROUTE + '/' + file.path}
+              target="_black"
+              className="text-blue-600"
+            >
+              {file.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    ),
   }));
   const refetchResources = () => {
     refetch().then((data) => {

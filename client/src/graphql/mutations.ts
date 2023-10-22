@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const LOGIN = gql`
-  mutation login($email: String, $password: String) {
+  mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       email
       token
@@ -58,5 +58,10 @@ export const SUBMIT_GRADE = gql`
 export const SUBMIT_RESOURCES = gql`
   mutation submitResources($resources: ResourceInput!) {
     submitResources(resources: $resources)
+  }
+`;
+export const UPLOAD_RESOURCES = gql`
+  mutation uploadFileResources($courseId: Int!, $files: [Upload!]!) {
+    uploadFileResources(courseId: $courseId, files: $files)
   }
 `;

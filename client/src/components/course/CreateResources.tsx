@@ -1,10 +1,18 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, FormInstance, Input, Space, message } from 'antd';
+import {
+  Button,
+  Form,
+  FormInstance,
+  Input,
+  Space,
+  Upload,
+  message,
+} from 'antd';
 import { useMutation } from '@apollo/client';
-import { SUBMIT_RESOURCES } from '@/graphql/mutations';
+import { SUBMIT_RESOURCES, UPLOAD_RESOURCES } from '@/graphql/mutations';
 import { useRef } from 'react';
 import TextArea from 'antd/es/input/TextArea';
-import { FaXmark } from 'react-icons/fa6';
+import { FaUpload, FaXmark } from 'react-icons/fa6';
 
 export default function CreateResources({ courseId, refetchResources }) {
   const [submitResources] = useMutation(SUBMIT_RESOURCES);
@@ -15,6 +23,7 @@ export default function CreateResources({ courseId, refetchResources }) {
       message.warning('At least one resource must be added.');
       return;
     }
+    console.log(values);
     try {
       const data = await submitResources({
         variables: {
@@ -34,6 +43,13 @@ export default function CreateResources({ courseId, refetchResources }) {
     } catch (e) {
       message.error(e.message);
     }
+  };
+
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
   };
   return (
     <Space direction="vertical" className="w-full">
@@ -85,6 +101,24 @@ export default function CreateResources({ courseId, refetchResources }) {
                       size="large"
                       rows={4}
                     />
+                  </Form.Item>
+                  <Form.Item label="Files">
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'files']}
+                      valuePropName="fileList"
+                      getValueFromEvent={normFile}
+                      noStyle
+                    >
+                      <Upload
+                        name="files"
+                        accept=".pdf"
+                        onChange={() => {}}
+                        maxItems={3}
+                      >
+                        <Button icon={<FaUpload />}>Upload attachments</Button>
+                      </Upload>
+                    </Form.Item>
                   </Form.Item>
                 </Space>
               ))}

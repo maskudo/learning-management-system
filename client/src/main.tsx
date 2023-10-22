@@ -8,12 +8,13 @@ import {
   ApolloProvider,
   createHttpLink,
 } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from '@apollo/client/link/context';
 import UserContextProvider from './context/userContext.tsx';
 
-const httpLink = createHttpLink({
-  uri: 'http://localhost:8000/graphql',
-});
+// const httpLink = createHttpLink({
+//   uri: 'http://localhost:8000/graphql',
+// });
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
   return {
@@ -24,7 +25,11 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(
+    createUploadLink({
+      uri: `${import.meta.env.VITE_API_ROUTE}/graphql`,
+    })
+  ),
   cache: new InMemoryCache(),
 });
 

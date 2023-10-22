@@ -3,6 +3,7 @@ from ariadne import gql
 type_defs = gql(
     """
     scalar Datetime
+    scalar Upload
     enum Role {
         admin
         student
@@ -127,11 +128,19 @@ type_defs = gql(
         option: QuestionOption
     }
 
+    type FileResource {
+        created_at: Datetime!
+        path: String!
+        id: Int!
+        name: String!
+    }
+
     type Resource {
         id: Int!
         title: String!
         description: String!
         course_id: Int!
+        files: [FileResource!]
     }
 
     input AddClassInput {
@@ -246,6 +255,7 @@ type_defs = gql(
     input ResourceInfo {
         title: String!
         description: String!
+        files: [Upload!]
 
     }
     input ResourceInput {
@@ -255,7 +265,7 @@ type_defs = gql(
     
     type Mutation {
         register(user: AddUserInput!): User 
-        login(email: String, password: String): LoginInfo
+        login(email: String!, password: String!): LoginInfo
         deleteUser(userId: Int!): Boolean
         addCategory(name: String!, description: String): Category
         deleteCategory(categoryId: Int!): Boolean
@@ -274,6 +284,7 @@ type_defs = gql(
         submitAssignment(submittedAssignment: SubmittedAssignmentInput!): Boolean
         submitGrade(submittedGrade: SubmitGradeInput!): Boolean
         submitResources(resources: ResourceInput!): Boolean
+        uploadFileResources(courseId: Int!, files: [Upload!]!): Boolean
     }
 
     type Query {

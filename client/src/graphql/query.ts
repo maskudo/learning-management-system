@@ -233,6 +233,11 @@ export const GET_RESOURCES_BY_COURSE = gql`
       id
       title
       description
+      files {
+        path
+        id
+        name
+      }
     }
   }
 `;

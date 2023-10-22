@@ -16,6 +16,7 @@ from models import (
     Submission,
     User,
     Resource,
+    FileResource,
 )
 
 

@@ -4,13 +4,11 @@ from graphql.type import GraphQLResolveInfo
 from starlette.middleware import Middleware
 from middleware.JWTManager import JWTManager
 from starlette.middleware.cors import CORSMiddleware
-from ariadne import (
-    ScalarType,
-    make_executable_schema,
-)
+from ariadne import ScalarType, make_executable_schema, upload_scalar
 from ariadne.asgi import GraphQL
 from schema import type_defs
 from fastapi import FastAPI
+from starlette.staticfiles import StaticFiles
 
 # resolvers
 from mygraphql.resolvers.auth import mutate as authMutate
@@ -57,6 +55,7 @@ schema = make_executable_schema(
     submissionMutate,
     resourceQuery,
     resourceMutate,
+    upload_scalar,
 )
 middleware = [
     Middleware(
@@ -87,6 +86,8 @@ def protect_route(resolver, obj, info: GraphQLResolveInfo, **args):
     return value
 
 
+upload_dir = "uploads"
+app.mount("/uploads", StaticFiles(directory=upload_dir), name="uploads")
 app.mount(
     "/graphql/",
     GraphQL(
