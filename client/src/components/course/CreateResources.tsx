@@ -1,4 +1,4 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import {
   Button,
   Form,
@@ -9,7 +9,7 @@ import {
   message,
 } from 'antd';
 import { useMutation } from '@apollo/client';
-import { SUBMIT_RESOURCES, UPLOAD_RESOURCES } from '@/graphql/mutations';
+import { SUBMIT_RESOURCES } from '@/graphql/mutations';
 import { useRef } from 'react';
 import TextArea from 'antd/es/input/TextArea';
 import { FaUpload, FaXmark } from 'react-icons/fa6';
@@ -23,7 +23,7 @@ export default function CreateResources({ courseId, refetchResources }) {
       message.warning('At least one resource must be added.');
       return;
     }
-    console.log(values);
+    // console.log(values);
     try {
       const data = await submitResources({
         variables: {
@@ -112,7 +112,7 @@ export default function CreateResources({ courseId, refetchResources }) {
                     >
                       <Upload
                         name="files"
-                        accept=".pdf"
+                        accept=".pdf|.mp4/*"
                         onChange={() => {}}
                         maxItems={3}
                       >

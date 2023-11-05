@@ -3,6 +3,8 @@ import CreateResources from './CreateResources';
 import { GET_RESOURCES_BY_COURSE } from '@/graphql/query';
 import { Collapse, Empty } from 'antd';
 import { useUserContext } from '@/context/userContext';
+import { Link } from 'react-router-dom';
+import Video from '@/pages/Video';
 
 export default function Resources({ courseId }) {
   const { user } = useUserContext();
@@ -12,7 +14,7 @@ export default function Resources({ courseId }) {
       courseId,
     },
   });
-  console.log(data?.getResourcesByCourse);
+  // console.log(data?.getResourcesByCourse);
   const items = data?.getResourcesByCourse?.map((item) => ({
     key: item.id,
     label: item.title,
@@ -21,16 +23,24 @@ export default function Resources({ courseId }) {
         <p>{item.description}</p>
         <div className="pt-3">
           <h4 className="text-lg text-orange-600">Attachments: </h4>
-          {item.files?.map((file) => (
-            <a
-              key={file.id}
-              href={import.meta.env.VITE_API_ROUTE + '/' + file.path}
-              target="_black"
-              className="text-blue-600"
-            >
-              {file.name}
-            </a>
-          ))}
+          {item.files?.map((file) => {
+            const temp = file.path.split('.');
+            const extension = temp[temp.length - 1];
+            if (extension === 'pdf') {
+              return (
+                <a
+                  key={file.id}
+                  href={import.meta.env.VITE_API_ROUTE + '/' + file.path}
+                  target="_black"
+                  className="text-blue-600"
+                >
+                  {file.name}
+                </a>
+              );
+            } else {
+              return <Video file={file} />;
+            }
+          })}
         </div>
       </div>
     ),
