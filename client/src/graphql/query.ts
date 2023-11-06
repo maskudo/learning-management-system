@@ -234,7 +234,6 @@ export const GET_RESOURCES_BY_COURSE = gql`
       title
       description
       files {
-        path
         id
         name
       }

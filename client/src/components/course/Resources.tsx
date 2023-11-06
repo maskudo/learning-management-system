@@ -3,7 +3,6 @@ import CreateResources from './CreateResources';
 import { GET_RESOURCES_BY_COURSE } from '@/graphql/query';
 import { Collapse, Empty } from 'antd';
 import { useUserContext } from '@/context/userContext';
-import { Link } from 'react-router-dom';
 import Video from '@/pages/Video';
 
 export default function Resources({ courseId }) {
@@ -24,7 +23,7 @@ export default function Resources({ courseId }) {
         <div className="pt-3">
           <h4 className="text-lg text-orange-600">Attachments: </h4>
           {item.files?.map((file) => {
-            const temp = file.path.split('.');
+            const temp = file.name.split('.');
             const extension = temp[temp.length - 1];
             if (extension === 'pdf') {
               return (

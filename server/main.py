@@ -1,15 +1,17 @@
 from ariadne.asgi.handlers import GraphQLHTTPHandler
-from ariadne.exceptions import HttpBadRequestError
+from ariadne.exceptions import HttpBadRequestError, HttpError
 from graphql.type import GraphQLResolveInfo
 from starlette.middleware import Middleware
 from middleware.JWTManager import JWTManager
 from starlette.middleware.cors import CORSMiddleware
 from ariadne import ScalarType, make_executable_schema, upload_scalar
 from ariadne.asgi import GraphQL
+from models.FileResource import FileResource
 from schema import type_defs
 from fastapi import FastAPI, Request, Response
 from starlette.staticfiles import StaticFiles
 from pathlib import Path
+from db import session
 
 # resolvers
 from mygraphql.resolvers.auth import mutate as authMutate
@@ -90,12 +92,15 @@ def protect_route(resolver, obj, info: GraphQLResolveInfo, **args):
     return value
 
 
-@app.get("/video/{video_filename}")
-def stream_video(video_filename, request: Request):
+@app.get("/video/{id}")
+def stream_video(id, request: Request):
     start, end = request.headers["range"].replace("bytes=", "").split("-")
     start = int(start)
     end = int(end) if end else start + CHUNK_SIZE
-    video_path = Path("uploads/" + video_filename)
+    video_obj = session.query(FileResource).get(id)
+    if not video_obj:
+        raise HttpError("Resource not found")
+    video_path = Path(video_obj.path)
     with open(video_path, "rb") as video:
         video.seek(start)
         data = video.read(end - start)
