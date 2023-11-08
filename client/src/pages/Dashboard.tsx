@@ -20,7 +20,7 @@ export default function Dashboard() {
           <h3 className="font-thin text-2xl ">Overview</h3>
           <div className="overview gap-2 grid grid-cols-2">
             <div
-              className="px-2 border-2 shadow-md  h-[10rem] flex justify-around flex-col font-thin text-3xl rounded-md hover:bg-gray-200 bg-gray-50"
+              className="px-2 border-2 shadow-md  flex justify-around flex-col font-thin text-3xl rounded-md hover:bg-gray-200 bg-gray-50"
               onClick={() => navigate('courses')}
             >
               <div>Active Courses</div>
@@ -43,7 +43,7 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-          <div className="flex flex-col gap-4 min-h-[30vh]">
+          <div className="flex flex-col gap-4 ">
             {!!assignments.length && (
               <div className="">
                 <h3 className="font-thin text-2xl mb-4">Your Assignments</h3>

@@ -40,9 +40,11 @@ export default function About({ info }) {
       <div className="description">
         <h3 className="text-2xl font-semibold text-gray-900">Description</h3>
         <div className="text-gray-600 py-2">
-          <p className="text-justify text-[1rem]">{info.description}</p>
+          <p className="text-justify text-[1rem] leading-6 ">
+            {info.description}
+          </p>
           <p>---</p>
-          <p className="text-justify text-[1rem]">{info.abstract}</p>
+          <p className="text-justify text-[1rem] leading-6">{info.abstract}</p>
         </div>
       </div>
       {!isTeachingThisCourse && (

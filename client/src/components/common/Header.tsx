@@ -36,7 +36,7 @@ export default function Header() {
             <img
               src={companyLogo}
               alt="company-logo"
-              className="img w-32 h-auto"
+              className="img w-32 "
             />
           </div>
           <ul className="flex items-center gap-6">
@@ -49,8 +49,8 @@ export default function Header() {
                       isPending
                         ? 'pending'
                         : isActive
-                        ? 'active underline underline-offset-8 decoration-blue-400 decoration-2'
-                        : ''
+                          ? 'active underline underline-offset-8 decoration-blue-400 decoration-2'
+                          : ''
                     }
                   >
                     {item.name}

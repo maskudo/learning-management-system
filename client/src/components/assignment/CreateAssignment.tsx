@@ -128,7 +128,7 @@ export default function CreateAssignment({ courseId }) {
           {(fields, { add, remove }, { errors }) => (
             <div>
               <p className="text-xs py-2">
-                * Green Indicates the correct answer field
+                * Green border indicates the correct answer field
               </p>
               {fields.map(({ key, name, ...restField }) => (
                 <Space key={key} className="flex flex-col " align="baseline">
@@ -147,11 +147,13 @@ export default function CreateAssignment({ courseId }) {
                   <div className="flex gap-4">
                     <Form.Item
                       {...restField}
-                      className="border-2 border-green-500"
                       name={[name, 'option-1']}
                       rules={[{ required: true, message: 'Missing option ' }]}
                     >
-                      <Input placeholder="Option" />
+                      <Input
+                        placeholder="Option"
+                        className="border-green-500 hover:border-green-300 focus:border-green-300"
+                      />
                     </Form.Item>
                     <Form.Item
                       {...restField}

@@ -7,12 +7,20 @@ import { useQuery } from '@apollo/client';
 import { CreateClass } from '.';
 import { Table } from 'antd';
 import { useUserContext } from '@/context/userContext';
+import { Link } from 'react-router-dom';
 
 const columns = [
   {
     title: 'Title',
     dataIndex: 'title',
-    render: (text: string) => <div className="capitalize">{text}</div>,
+    render: (text: string, record) => (
+      <Link
+        to={`class/${record.id}`}
+        className="capitalize underline underline-offset-2"
+      >
+        {text}
+      </Link>
+    ),
   },
   {
     title: 'Teacher',
