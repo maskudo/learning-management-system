@@ -8,6 +8,7 @@ import { CreateClass } from '.';
 import { Table } from 'antd';
 import { useUserContext } from '@/context/userContext';
 import { Link } from 'react-router-dom';
+import ScheduleTable from '../ScheduleTable';
 
 const columns = [
   {
@@ -61,13 +62,7 @@ export default function Classes({ courseInfo }) {
       {isTeachingThisCourse && (
         <CreateClass courseId={courseInfo.id} teacherId={user.id} />
       )}
-      {loading && <div>Loading... </div>}
-      {error && <div>{error.message}</div>}
-      {!loading && !error && (
-        <div>
-          <Table columns={columns} dataSource={classes} />
-        </div>
-      )}
+      <ScheduleTable classes={classes} loading={loading} error={error} emptyMessage="No upcoming classes" />
     </div>
   );
 }

@@ -14,6 +14,7 @@ import Resources from '@/components/course/Resources';
 
 export default function Course() {
   const { id } = useParams();
+  const curTab = (useParams()["*"] ?? 'About').toLowerCase();
   const { data, error, loading } = useQuery(GET_COURSE_BY_ID, {
     variables: {
       id: parseInt(id ?? ''),
@@ -28,44 +29,45 @@ export default function Course() {
         <>
           <h2 className="text-3xl font-semibold">{course.name}</h2>
           <Tabs
-            defaultActiveKey="1"
+            onChange={(key) => { history.pushState({}, "", `/courses/${id}/${key}`) }}
+            defaultActiveKey={curTab}
             items={[
               {
-                label: 'Course',
-                key: '1',
+                label: 'About',
+                key: 'about',
                 children: <About info={course} />,
               },
               {
                 label: 'Resources',
-                key: '7',
+                key: 'resources',
                 children: <Resources courseId={course.id} />,
               },
               {
                 label: 'Classes',
-                key: '6',
+                key: 'classes',
                 children: <Classes courseInfo={course} />,
                 // disabled: getUserByEmail.role === 'student',
               },
               {
                 label: 'Participants',
-                key: '2',
+                key: 'participants',
                 children: <Participants courseId={course.id} />,
                 // disabled: getUserByEmail.role === 'student',
               },
               {
                 label: 'Teachers',
-                key: '3',
+                key: 'teachers',
                 children: <Teachers courseId={course.id} />,
               },
               {
                 label: 'Assignments',
-                key: '4',
+                key: 'assignments',
                 children: <Assignments courseId={course.id} />,
                 // disabled: getUserByEmail.role === 'student',
               },
               {
                 label: 'Submissions',
-                key: '5',
+                key: 'submissions',
                 children: <Submissions courseId={course.id} />,
                 // disabled: getUserByEmail.role === 'student',
               },
