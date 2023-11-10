@@ -29,17 +29,20 @@ class ConnectionManager:
                 break
         del self.rooms[room][index]
 
-        await self.broadcast(room, {"event": "leave-room", "data": {"userId": userId}})
+        await self.broadcast(
+            room, None, {"event": "leave-room", "data": {"userId": userId}}
+        )
         print("disconnected froom", self.rooms)
 
     async def send_json_message(self, websocket: WebSocket, message):
         await websocket.send_json(message)
 
-    async def broadcast(self, roomId, message):
+    async def broadcast(self, roomId, userId, message):
         for k, v in self.rooms.items():
             if k == roomId:
                 for user in v:
-                    await user["socket"].send_json(message)
+                    if user["userId"] != userId:
+                        await user["socket"].send_json(message)
                 break
 
     async def join_room(self, roomId, userId, websocket):
@@ -47,8 +50,8 @@ class ConnectionManager:
             self.rooms[roomId] = [{"userId": userId, "socket": websocket}]
         else:
             self.rooms[roomId].append({"userId": userId, "socket": websocket})
-        self.records[websocket] = {
-            "roomId": roomId,
-        }
+        self.records[websocket] = {"roomId": roomId, "userId": userId}
         print(f"user {userId} has joined {self.rooms[roomId]}")
-        await self.broadcast(roomId, {"event": "join-room", "data": {"userId": userId}})
+        await self.broadcast(
+            roomId, userId, {"event": "join-room", "data": {"userId": userId}}
+        )

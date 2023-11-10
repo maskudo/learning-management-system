@@ -8,45 +8,76 @@ import { useParams } from 'react-router-dom';
 
 export default function Class() {
   const { classId } = useParams();
-  const { user } = useUserContext()
-  const [streams, setStreams] = useState<MediaStream[]>([])
+  const { user } = useUserContext();
+  const [myStream, setMyStream] = useState<MediaStream>();
+  const [otherStreams, setOtherStreams] = useState<MediaStream[]>([]);
   useEffect(() => {
     if (!user) {
-      return
+      return;
     }
-    const myPeer = new Peer()
-    const s = new WebSocket(WS_ROUTE);
-    navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
-    }).then(stream => {
-      setStreams([...streams, stream])
-    }).catch(e => message.info(e))
-    myPeer.on("open", id => {
-      s.send(JSON.stringify({
-        event: "join-room",
-        data: {
-          userId: id,
-          roomId: classId
+    (async () => {
+      const myPeer = new Peer();
+      const s = new WebSocket(WS_ROUTE);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setMyStream(stream);
+      myPeer.on('open', (id) => {
+        s.send(
+          JSON.stringify({
+            event: 'join-room',
+            data: {
+              userId: id,
+              roomId: classId,
+            },
+          })
+        );
+      });
+      myPeer.on('call', (call) => {
+        // console.log("received call, sending my stream", myStream)
+        call.answer(stream);
+        call.on('stream', (userVideoStream) => {
+          // console.log("received call, opeing other stream")
+          setOtherStreams([...otherStreams, userVideoStream]);
+        });
+      });
+      s.onmessage = ({ data }) => {
+        const d = JSON.parse(data);
+        if (d['event'] == 'join-room') {
+          const otherUser = d.data.userId;
+          const call = myPeer.call(otherUser, stream);
+          call.on('stream', (otherStream) => {
+            // console.log("receiving other strem")
+            setOtherStreams([...otherStreams, otherStream]);
+          });
+          call.on('close', () => {
+            // TODO
+            console.log('call closed');
+          });
         }
-      }));
-    })
-    s.onmessage = ({ data }) => {
-      console.log(data)
-    }
-    return () => {
-      s.close();
-      setStreams([])
-      myPeer.disconnect()
-
-    }
-
-  }, [user, classId])
-  return <div className="flex">
-    {
-      streams.map(stream => (
-        <ReactPlayer playing muted url={stream} className="h-[50px] w-[100px]" />
-      ))
-    }
-  </div>;
+      };
+    })();
+  }, [user, classId]);
+  console.log(otherStreams);
+  return (
+    <div className="flex">
+      <ReactPlayer
+        playing
+        muted
+        url={myStream}
+        className="h-[50px] w-[100px]"
+        key={myStream?.id}
+      />
+      {otherStreams.map((stream) => (
+        <ReactPlayer
+          playing
+          muted
+          url={stream}
+          className="h-[50px] w-[100px]"
+          key={stream.id}
+        />
+      ))}
+    </div>
+  );
 }
