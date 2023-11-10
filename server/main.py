@@ -68,7 +68,7 @@ middleware = [
     Middleware(
         CORSMiddleware,
         allow_origins=["*"],
-        allow_methods=["POST"],
+        allow_methods=["POST", "GET"],
         allow_headers=["access-control-allow-origin", "authorization", "content-type"],
     )
 ]
