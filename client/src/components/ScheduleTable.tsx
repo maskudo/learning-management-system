@@ -3,11 +3,12 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(localizedFormat);
 
 import { Empty, Table } from 'antd';
+import { Link } from 'react-router-dom';
 const columns = [
   {
     title: 'Title',
     dataIndex: 'title',
-    render: (text: string) => <div className="capitalize">{text}</div>,
+    render: (text: string, record) => <Link to={`/class/${record.key}`} className="capitalize underline underline-offset-2">{text}</Link>,
   },
   {
     title: 'Course',
@@ -31,6 +32,7 @@ export default function ScheduleTable({
   classes,
   emptyMessage,
 }) {
+  console.log({ classes })
   return (
     <div className="schedule-table ">
       {loading && <div>Loading... </div>}

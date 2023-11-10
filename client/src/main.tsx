@@ -6,11 +6,11 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink,
 } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from '@apollo/client/link/context';
 import UserContextProvider from './context/userContext.tsx';
+import { API_ROUTE } from './constants/const.ts';
 
 // const httpLink = createHttpLink({
 //   uri: 'http://localhost:8000/graphql',
@@ -27,7 +27,7 @@ const authLink = setContext((_, { headers }) => {
 const client = new ApolloClient({
   link: authLink.concat(
     createUploadLink({
-      uri: `${import.meta.env.VITE_API_ROUTE}/graphql`,
+      uri: `${API_ROUTE}/graphql`,
     })
   ),
   cache: new InMemoryCache(),

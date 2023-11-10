@@ -4,6 +4,7 @@ import { GET_RESOURCES_BY_COURSE } from '@/graphql/query';
 import { Collapse, Empty } from 'antd';
 import { useUserContext } from '@/context/userContext';
 import Video from '@/pages/Video';
+import { API_ROUTE } from '@/constants/const';
 
 export default function Resources({ courseId }) {
   const { user } = useUserContext();
@@ -29,7 +30,7 @@ export default function Resources({ courseId }) {
               return (
                 <a
                   key={file.id}
-                  href={import.meta.env.VITE_API_ROUTE + '/' + file.path}
+                  href={API_ROUTE + '/' + file.path}
                   target="_black"
                   className="text-blue-600"
                 >

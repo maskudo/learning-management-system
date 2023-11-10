@@ -1,17 +1,31 @@
+import { WS_ROUTE } from '@/constants/const';
 import { useUserContext } from '@/context/userContext';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
 
-// const socket_route = `${import.meta.env.VITE_API_ROUTE}/socket.io`;
 export default function Class() {
   const { classId } = useParams();
-  // const { user } = useUserContext();
-  // const socket = useRef();
-  // useEffect(() => {
-  //   socket.current = io(import.meta.env.VITE_API_ROUTE);
-  //   console.log(socket.current);
-  //   // socket.current?.emit('add-user', user.id);
-  // }, []);
+  const { user } = useUserContext()
+  useEffect(() => {
+    if (!user) {
+      return
+    }
+    const s = new WebSocket(WS_ROUTE);
+
+    s.onopen = (_) => {
+      s.send(JSON.stringify({
+        event: "join-room",
+        data: {
+          userId: user.id,
+          roomId: classId
+        }
+      }));
+    }
+    s.onmessage = ({ data }) => {
+      console.log(data)
+    }
+    return () => { s.close() }
+
+  }, [user, classId])
   return <div>{classId}</div>;
 }

@@ -8,7 +8,7 @@ from ariadne import ScalarType, make_executable_schema, upload_scalar
 from ariadne.asgi import GraphQL
 from models.FileResource import FileResource
 from schema import type_defs
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, WebSocket, WebSocketDisconnect
 from starlette.staticfiles import StaticFiles
 from pathlib import Path
 from db import session
@@ -25,6 +25,7 @@ from mygraphql.resolvers.assignment import assignmentQuery, assignmentMutate
 from mygraphql.resolvers.question import questionQuery, questionMutate
 from mygraphql.resolvers.submission import submissionQuery, submissionMutate
 from mygraphql.resolvers.resource import resourceQuery, resourceMutate
+from wsockets import ConnectionManager
 
 datetime_scalar = ScalarType("Datetime")
 
@@ -90,6 +91,29 @@ def protect_route(resolver, obj, info: GraphQLResolveInfo, **args):
 
     value = resolver(obj, info, **args)
     return value
+
+
+manager = ConnectionManager()
+
+
+@app.websocket("/classes")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            # print(data)
+            event = data["event"]
+            if event == "join-room":
+                data = data["data"]
+                roomId = data["roomId"]
+                userId = data["userId"]
+                await manager.join_room(roomId, userId, websocket)
+            # await manager.send_message(websocket, {"userID": data["data"]["userId"]})
+
+    except WebSocketDisconnect:
+        await manager.disconnect(websocket)
+        print("disconnected", websocket)
 
 
 @app.get("/video/{id}")

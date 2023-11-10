@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from ariadne import ObjectType, QueryType
-from sqlalchemy import Date, and_
+from sqlalchemy import and_
 
 from db import session
 from models.Class import Class
@@ -35,7 +35,6 @@ def resolve_get_classes_by_course(*_, courseId):
         .where(and_(Class.course_id == courseId, Class.end_time < date.today()))
         .all()
     )
-    classes = [clss for clss in classes if clss.end_time > datetime.now()]
     return classes
 
 

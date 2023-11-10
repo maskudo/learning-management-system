@@ -5,40 +5,9 @@ dayjs.extend(localizedFormat);
 
 import { useQuery } from '@apollo/client';
 import { CreateClass } from '.';
-import { Table } from 'antd';
 import { useUserContext } from '@/context/userContext';
-import { Link } from 'react-router-dom';
 import ScheduleTable from '../ScheduleTable';
 
-const columns = [
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    render: (text: string, record) => (
-      <Link
-        to={`class/${record.id}`}
-        className="capitalize underline underline-offset-2"
-      >
-        {text}
-      </Link>
-    ),
-  },
-  {
-    title: 'Teacher',
-    dataIndex: 'teacher',
-    render: (text: string) => <div className="capitalize">{text}</div>,
-  },
-  {
-    title: 'Start Time',
-    dataIndex: 'start_time',
-    render: (text: string) => <div>{dayjs(text).format('LLLL')}</div>,
-  },
-  {
-    title: 'End Time',
-    dataIndex: 'end_time',
-    render: (text: string) => <div>{dayjs(text).format('LLLL')}</div>,
-  },
-];
 
 export default function Classes({ courseInfo }) {
   const { user } = useUserContext();

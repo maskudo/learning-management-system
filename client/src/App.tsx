@@ -20,9 +20,9 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />}>
             <Route index element={<Dashboard />}></Route>
+            <Route path="class/:classId" element={<Class />} />
             <Route path="courses" element={<Courses />} />
             <Route path="courses/:id" element={<Course />}></Route>
-            <Route path="courses/:id/class/:classId" element={<Class />} />
             <Route
               path="courses/:id/assignment/:assignment"
               element={<Assignment />}
