@@ -1,30 +1,33 @@
-from ariadne.asgi.handlers import GraphQLHTTPHandler
-from ariadne.exceptions import HttpBadRequestError, HttpError
-from graphql.type import GraphQLResolveInfo
-from starlette.middleware import Middleware
-from middleware.JWTManager import JWTManager
-from starlette.middleware.cors import CORSMiddleware
+from pathlib import Path
+
 from ariadne import ScalarType, make_executable_schema, upload_scalar
 from ariadne.asgi import GraphQL
-from models.FileResource import FileResource
-from schema import type_defs
+from ariadne.asgi.handlers import GraphQLHTTPHandler
+from ariadne.exceptions import HttpBadRequestError, HttpError
 from fastapi import FastAPI, Request, Response, WebSocket, WebSocketDisconnect
+from graphql.type import GraphQLResolveInfo
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
-from pathlib import Path
+from starlette.websockets import WebSocketClose
+
 from db import session
+from middleware.JWTManager import JWTManager
+from models.FileResource import FileResource
+from mygraphql.resolvers.assignment import assignmentMutate, assignmentQuery
 
 # resolvers
 from mygraphql.resolvers.auth import mutate as authMutate
-from mygraphql.resolvers.user import userMutate, userQuery
-from mygraphql.resolvers.category import categoryQuery, categoryMutate
+from mygraphql.resolvers.category import categoryMutate, categoryQuery
+from mygraphql.resolvers.classes import classMutate, classQuery
 from mygraphql.resolvers.course import courseMutate, courseQuery
-from mygraphql.resolvers.enrollment import enrollmentQuery, enrollmentMutate
-from mygraphql.resolvers.course_teacher import courseTeacherQuery, courseTeacherMutate
-from mygraphql.resolvers.classes import classQuery, classMutate
-from mygraphql.resolvers.assignment import assignmentQuery, assignmentMutate
-from mygraphql.resolvers.question import questionQuery, questionMutate
-from mygraphql.resolvers.submission import submissionQuery, submissionMutate
-from mygraphql.resolvers.resource import resourceQuery, resourceMutate
+from mygraphql.resolvers.course_teacher import courseTeacherMutate, courseTeacherQuery
+from mygraphql.resolvers.enrollment import enrollmentMutate, enrollmentQuery
+from mygraphql.resolvers.question import questionMutate, questionQuery
+from mygraphql.resolvers.resource import resourceMutate, resourceQuery
+from mygraphql.resolvers.submission import submissionMutate, submissionQuery
+from mygraphql.resolvers.user import userMutate, userQuery
+from schema import type_defs
 from wsockets import ConnectionManager
 
 datetime_scalar = ScalarType("Datetime")
@@ -111,7 +114,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 await manager.join_room(roomId, userId, websocket)
             # await manager.send_message(websocket, {"userID": data["data"]["userId"]})
 
-    except WebSocketDisconnect:
+    except WebSocketDisconnect or WebSocketClose:
         await manager.disconnect(websocket)
         print("disconnected", websocket)
 

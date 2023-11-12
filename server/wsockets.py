@@ -28,7 +28,7 @@ class ConnectionManager:
                 index = i
                 break
         del self.rooms[room][index]
-
+        del self.records[websocket]
         await self.broadcast(
             room, None, {"event": "leave-room", "data": {"userId": userId}}
         )
@@ -37,11 +37,11 @@ class ConnectionManager:
     async def send_json_message(self, websocket: WebSocket, message):
         await websocket.send_json(message)
 
-    async def broadcast(self, roomId, userId, message):
+    async def broadcast(self, roomId, curUser, message):
         for k, v in self.rooms.items():
             if k == roomId:
                 for user in v:
-                    if user["userId"] != userId:
+                    if user["userId"] != curUser:
                         await user["socket"].send_json(message)
                 break
 

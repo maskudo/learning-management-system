@@ -1,72 +1,100 @@
 import { WS_ROUTE } from '@/constants/const';
-import { useUserContext } from '@/context/userContext';
 import { message } from 'antd';
 import { Peer } from 'peerjs';
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useParams } from 'react-router-dom';
 
+// TODO: fix:the event listeners get set twice i think
 export default function Class() {
   const { classId } = useParams();
-  const { user } = useUserContext();
   const [myStream, setMyStream] = useState<MediaStream>();
   const [otherStreams, setOtherStreams] = useState<MediaStream[]>([]);
   useEffect(() => {
-    if (!user) {
-      return;
-    }
-    (async () => {
-      const myPeer = new Peer();
-      const s = new WebSocket(WS_ROUTE);
-      const stream = await navigator.mediaDevices.getUserMedia({
+    const s = new WebSocket(WS_ROUTE);
+    const peer = new Peer({
+      config: {
+        "iceServers": [
+          { urls: ["stun:stun.l.google.com:19302"] }
+        ]
+      }
+    });
+    const myStr = navigator.mediaDevices
+      .getUserMedia({
         video: true,
         audio: true,
-      });
-      setMyStream(stream);
-      myPeer.on('open', (id) => {
-        s.send(
-          JSON.stringify({
-            event: 'join-room',
-            data: {
-              userId: id,
-              roomId: classId,
-            },
-          })
-        );
-      });
-      myPeer.on('call', (call) => {
-        // console.log("received call, sending my stream", myStream)
-        call.answer(stream);
-        call.on('stream', (userVideoStream) => {
-          // console.log("received call, opeing other stream")
-          setOtherStreams([...otherStreams, userVideoStream]);
+      })
+      .then((stream) => {
+        setMyStream((_) => stream);
+        peer.on('open', (id) => {
+          s.send(
+            JSON.stringify({
+              event: 'join-room',
+              data: {
+                userId: id,
+                roomId: classId,
+              },
+            })
+          );
         });
-      });
-      s.onmessage = ({ data }) => {
-        const d = JSON.parse(data);
-        if (d['event'] == 'join-room') {
-          const otherUser = d.data.userId;
-          const call = myPeer.call(otherUser, stream);
+        peer.on('call', (call) => {
+          call.answer(stream);
           call.on('stream', (otherStream) => {
-            // console.log("receiving other strem")
-            setOtherStreams([...otherStreams, otherStream]);
+            setOtherStreams((streams) => {
+              if (streams.find(stream => stream === otherStream)) {
+                return [...streams]
+              } else {
+                return [...streams, otherStream]
+              }
+            });
           });
-          call.on('close', () => {
-            // TODO
-            console.log('call closed');
-          });
-        }
-      };
-    })();
-  }, [user, classId]);
-  console.log(otherStreams);
+        });
+        s.onmessage = ({ data }) => {
+          const d = JSON.parse(data);
+          if (d['event'] === 'join-room') {
+            const otherUser = d.data.userId;
+            const call = peer.call(otherUser, stream);
+            call.on('stream', (otherStream) => {
+              setOtherStreams((streams) => {
+                if (streams.find(stream => stream === otherStream)) {
+                  return [...streams]
+                } else {
+                  return [...streams, otherStream]
+                }
+
+              });
+              call.on('close', () => {
+                setOtherStreams((streams) => {
+                  otherStream.getTracks().forEach((track) => {
+                    track.stop();
+                  });
+                  return streams.filter((stream) => stream !== otherStream);
+                });
+              });
+            });
+          }
+        };
+        return stream;
+      }).catch(e => {
+        message.error(e.message)
+      });
+    return () => {
+      s.close();
+      peer.destroy();
+      myStr.then((str) => {
+        str.getTracks().forEach((track) => track.stop());
+      });
+    };
+  }, []);
   return (
-    <div className="flex">
+    <div className="flex gap-2">
       <ReactPlayer
         playing
         muted
         url={myStream}
-        className="h-[50px] w-[100px]"
+        width="100%"
+        className="border-2 border-orange-300"
+        height="100%"
         key={myStream?.id}
       />
       {otherStreams.map((stream) => (
@@ -74,7 +102,9 @@ export default function Class() {
           playing
           muted
           url={stream}
-          className="h-[50px] w-[100px]"
+          className=""
+          width="100%"
+          height="100%"
           key={stream.id}
         />
       ))}

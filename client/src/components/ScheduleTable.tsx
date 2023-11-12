@@ -32,7 +32,6 @@ export default function ScheduleTable({
   classes,
   emptyMessage,
 }) {
-  console.log({ classes })
   return (
     <div className="schedule-table ">
       {loading && <div>Loading... </div>}
