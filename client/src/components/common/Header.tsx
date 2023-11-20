@@ -1,8 +1,7 @@
 import { companyLogo } from '@/constants/images';
 import { useUserContext } from '@/context/userContext';
 import { useApolloClient } from '@apollo/client';
-import { FaArrowRightFromBracket, FaRegUser } from 'react-icons/fa6';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 const navItems = [
   {
     name: 'Home',
@@ -33,11 +32,7 @@ export default function Header() {
       <nav className="flex items-center gap-6 justify-between">
         <div className="left flex">
           <div className="logo">
-            <img
-              src={companyLogo}
-              alt="company-logo"
-              className="img w-32 "
-            />
+            <img src={companyLogo} alt="company-logo" className="img w-32 " />
           </div>
           <ul className="flex items-center gap-6">
             {navItems.map((item) => {
@@ -61,13 +56,16 @@ export default function Header() {
           </ul>
         </div>
         <ul className="right flex gap-6 items-center">
-          <li className="flex flex-col items-center">
-            <Link to="/profile">
-              <FaRegUser className="w-8 h-8" />{' '}
-            </Link>
-          </li>
-          <li onClick={onClick}>
-            <FaArrowRightFromBracket className="w-8 h-8" />
+          {
+            // <li className="flex flex-col items-center">
+            //   <Link to="/profile">Profile</Link>
+            // </li>
+          }
+          <li
+            onClick={onClick}
+            className="border p-2 bg-gray-200 hover:bg-red-500 hover:text-white rounded-lg flex justify-center items-center gap-2"
+          >
+            Log out
           </li>
         </ul>
       </nav>

@@ -1,15 +1,15 @@
 import { useUserContext } from '@/context/userContext';
 import { GET_ASSIGNMENTS_BY_USER } from '@/graphql/query';
-import { useApolloClient, useQuery } from '@apollo/client';
+import { useApolloClient, useLazyQuery } from '@apollo/client';
+import { useEffect } from 'react';
 
 export default function useAssignmentsQuery() {
   const { user } = useUserContext();
   const client = useApolloClient();
-  const { data, error, loading, refetch } = useQuery(GET_ASSIGNMENTS_BY_USER, {
-    variables: {
-      userId: user?.id,
-    },
-  });
+  const [getAssignments, { data, error, loading, refetch }] = useLazyQuery(
+    GET_ASSIGNMENTS_BY_USER,
+    {}
+  );
   const refetchAssignments = () => {
     refetch().then((data) => {
       client.writeQuery({
@@ -21,6 +21,15 @@ export default function useAssignmentsQuery() {
       });
     });
   };
+  useEffect(() => {
+    if (user) {
+      getAssignments({
+        variables: {
+          userId: user?.id,
+        },
+      });
+    }
+  }, [user, getAssignments]);
 
   return {
     data: data?.getAssignmentsByUser,

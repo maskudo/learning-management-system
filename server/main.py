@@ -32,7 +32,6 @@ from wsockets import ConnectionManager
 
 datetime_scalar = ScalarType("Datetime")
 
-
 CHUNK_SIZE: int = 1024 * 1024
 
 
@@ -72,7 +71,8 @@ middleware = [
         CORSMiddleware,
         allow_origins=["*"],
         allow_methods=["POST", "GET"],
-        allow_headers=["access-control-allow-origin", "authorization", "content-type"],
+        allow_headers=["access-control-allow-origin",
+                       "authorization", "content-type"],
     )
 ]
 app = FastAPI(debug=True, middleware=middleware)
