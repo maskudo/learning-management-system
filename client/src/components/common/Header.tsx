@@ -56,11 +56,9 @@ export default function Header() {
           </ul>
         </div>
         <ul className="right flex gap-6 items-center">
-          {
-            // <li className="flex flex-col items-center">
-            //   <Link to="/profile">Profile</Link>
-            // </li>
-          }
+          {/* <li className="flex flex-col items-center"> */}
+          {/*   <Link to="/profile">Profile</Link> */}
+          {/* </li> */}
           <li
             onClick={onClick}
             className="border p-2 bg-gray-200 hover:bg-red-500 hover:text-white rounded-lg flex justify-center items-center gap-2"

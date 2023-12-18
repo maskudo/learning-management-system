@@ -14,10 +14,8 @@ export default function Class() {
     const s = new WebSocket(WS_ROUTE);
     const peer = new Peer({
       config: {
-        "iceServers": [
-          { urls: ["stun:stun.l.google.com:19302"] }
-        ]
-      }
+        iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }],
+      },
     });
     const myStr = navigator.mediaDevices
       .getUserMedia({
@@ -41,10 +39,10 @@ export default function Class() {
           call.answer(stream);
           call.on('stream', (otherStream) => {
             setOtherStreams((streams) => {
-              if (streams.find(stream => stream === otherStream)) {
-                return [...streams]
+              if (streams.find((stream) => stream === otherStream)) {
+                return [...streams];
               } else {
-                return [...streams, otherStream]
+                return [...streams, otherStream];
               }
             });
           });
@@ -56,12 +54,11 @@ export default function Class() {
             const call = peer.call(otherUser, stream);
             call.on('stream', (otherStream) => {
               setOtherStreams((streams) => {
-                if (streams.find(stream => stream === otherStream)) {
-                  return [...streams]
+                if (streams.find((stream) => stream === otherStream)) {
+                  return [...streams];
                 } else {
-                  return [...streams, otherStream]
+                  return [...streams, otherStream];
                 }
-
               });
               call.on('close', () => {
                 setOtherStreams((streams) => {
@@ -75,8 +72,9 @@ export default function Class() {
           }
         };
         return stream;
-      }).catch(e => {
-        message.error(e.message)
+      })
+      .catch((e) => {
+        message.error(e.message);
       });
     return () => {
       s.close();
@@ -100,7 +98,6 @@ export default function Class() {
       {otherStreams.map((stream) => (
         <ReactPlayer
           playing
-          muted
           url={stream}
           className=""
           width="100%"
