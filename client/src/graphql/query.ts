@@ -3,7 +3,6 @@ export const GET_CATEGORIES = gql`
   query getCategories {
     categories {
       name
-      description
       id
     }
   }

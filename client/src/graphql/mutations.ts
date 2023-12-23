@@ -73,3 +73,12 @@ export const ADD_CATEGORY = gql`
     }
   }
 `;
+export const ADD_COURSE = gql`
+  mutation addCourse($course: AddCourseInput!) {
+    addCourse(course: $course) {
+      id
+      name
+      description
+    }
+  }
+`;

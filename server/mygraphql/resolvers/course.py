@@ -23,19 +23,19 @@ def resolve_course(*_, courseId):
 
 @courseMutate.field("addCourse")
 def resolve_add_course(*_, course):
-    try:
-        courseObj = Course(
-            course["name"],
-            course.get("description", None),
-            course.get("abstract", None),
-            course.get("bibliography", None),
-            course["category"],
-        )
-        session.add(courseObj)
-        session.commit()
-        return courseObj
-    except Exception:
-        raise HttpError("Error adding course")
+    oldCourse = session.query(Course).where(Course.name == course["name"]).first()
+    if oldCourse:
+        raise HttpError(f"Course with name '{oldCourse.name}'already exists")
+    courseObj = Course(
+        course["name"],
+        course.get("description", None),
+        course.get("abstract", None),
+        course.get("bibliography", None),
+        course["category"],
+    )
+    session.add(courseObj)
+    session.commit()
+    return courseObj
 
 
 @courseMutate.field("deleteCourse")

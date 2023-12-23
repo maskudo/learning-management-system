@@ -1,6 +1,5 @@
 from ariadne import ObjectType, QueryType
 from ariadne.exceptions import HttpError
-from sqlalchemy.exc import NoResultFound
 
 from db import session
 from models.Category import Category
@@ -11,14 +10,13 @@ categoryMutate = ObjectType("Mutation")
 
 @categoryMutate.field("addCategory")
 def resolve_add_category(*_, name, description):
-    try:
-        session.query(Category).where(Category.name == name).one()
+    exists = session.query(Category).where(Category.name == name).first()
+    if exists:
         raise HttpError("Category already exists")
-    except NoResultFound:
-        categoryObj = Category(name, description)
-        session.add(categoryObj)
-        session.commit()
-        return categoryObj
+    categoryObj = Category(name, description)
+    session.add(categoryObj)
+    session.commit()
+    return categoryObj
 
 
 @categoryMutate.field("deleteCategory")
