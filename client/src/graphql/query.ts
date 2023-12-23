@@ -239,3 +239,12 @@ export const GET_RESOURCES_BY_COURSE = gql`
     }
   }
 `;
+
+export const GET_AVAILABLE_TEACHERS_BY_COURSE = gql`
+  query getAvailableTeachersByCourse($courseId: Int!) {
+    getAvailableTeachersByCourse(courseId: $courseId) {
+      id
+      name
+    }
+  }
+`;

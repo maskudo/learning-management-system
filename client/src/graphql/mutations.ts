@@ -82,3 +82,13 @@ export const ADD_COURSE = gql`
     }
   }
 `;
+export const ADD_COURSE_TEACHER = gql`
+  mutation addCourseTeacher($courseId: Int!, $teacherId: Int!) {
+    addCourseTeacher(courseId: $courseId, teacherId: $teacherId) {
+      teacher {
+        name
+        id
+      }
+    }
+  }
+`;

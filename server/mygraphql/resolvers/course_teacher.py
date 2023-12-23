@@ -1,8 +1,10 @@
 from ariadne import ObjectType, QueryType
 from ariadne.exceptions import HttpBadRequestError
+from sqlalchemy import or_
 
 from db import session
 from models.CourseTeacher import CourseTeacher
+from models.User import User
 
 courseTeacherQuery = QueryType()
 courseTeacherMutate = ObjectType("Mutation")
@@ -26,8 +28,24 @@ def resolve_add_course_teacher(*_, courseId, teacherId):
 
 
 @courseTeacherQuery.field("getTeachersByCourse")
-def resolve_get_teachers_by_courset(*_, courseId):
+def resolve_get_teachers_by_course(*_, courseId):
     courseTeachers = session.query(CourseTeacher).where(
         CourseTeacher.course_id == courseId
     )
     return courseTeachers
+
+
+@courseTeacherQuery.field("getAvailableTeachersByCourse")
+def resolve_get_teachers(*_, courseId):
+    subquery = (
+        session.query(CourseTeacher.teacher_id)
+        .where(CourseTeacher.course_id == courseId)
+        .subquery()
+    )
+    teachers = (
+        session.query(User)
+        .where(or_(User.role == "admin", User.role == "teacher"))
+        .where(User.id.notin_(subquery))
+    )
+
+    return teachers

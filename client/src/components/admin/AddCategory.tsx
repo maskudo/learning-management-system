@@ -22,7 +22,6 @@ function AddCategory() {
       message.success('Category created successfully');
       form.resetFields();
     } catch (e) {
-      console.log(e);
       message.error(e.message);
     }
   };

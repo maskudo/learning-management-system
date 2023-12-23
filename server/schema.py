@@ -299,6 +299,7 @@ type_defs = gql(
         enrollment(enrollmentId: Int!): Enrollment
         getEnrollmentsByCourse(courseId: Int!): [Enrollment]
         getTeachersByCourse(courseId: Int!): [CourseTeacher]
+        getAvailableTeachersByCourse(courseId: Int!): [User!]
         getClassesByCourse(courseId: Int!): [Class]
         getClassesByUser(userId: Int!): [Class]
         getClassesByTeacher(teacherId: Int!): [Class]

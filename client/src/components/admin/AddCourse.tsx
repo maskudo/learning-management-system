@@ -9,12 +9,11 @@ function AddCourse() {
   const [addCourse] = useMutation(ADD_COURSE);
   const handleSubmit = async (values) => {
     try {
-      const { data } = await addCourse({
+      await addCourse({
         variables: {
           course: values,
         },
       });
-      console.log(data.course);
       message.success('Course created successfully');
       form.resetFields();
     } catch (e) {
