@@ -12,6 +12,7 @@ import PrivateRoute from './utils/PrivateRoute';
 import Error404 from './pages/404';
 import Submission from './pages/Submission';
 import Class from './pages/Class';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -31,12 +32,10 @@ function App() {
               path="courses/:id/submissions/:submission"
               element={<Submission />}
             />
-            <Route
-              path="courses/:id/*"
-              element={<Course />}
-            />
+            <Route path="courses/:id/*" element={<Course />} />
             <Route path="schedule" element={<Schedule />}></Route>
             <Route path="profile" element={<Profile />}></Route>
+            <Route path="admin" element={<Admin />}></Route>
           </Route>
         </Route>
         <Route path="/register" element={<Register />} />

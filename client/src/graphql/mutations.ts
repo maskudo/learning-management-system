@@ -65,3 +65,11 @@ export const UPLOAD_RESOURCES = gql`
     uploadFileResources(courseId: $courseId, files: $files)
   }
 `;
+
+export const ADD_CATEGORY = gql`
+  mutation addCategory($name: String!, $description: String) {
+    addCategory(name: $name, description: $description) {
+      id
+    }
+  }
+`;

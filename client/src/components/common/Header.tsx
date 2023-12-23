@@ -20,7 +20,7 @@ const navItems = [
 export default function Header() {
   const navigate = useNavigate();
   const client = useApolloClient();
-  const { setUser } = useUserContext();
+  const { user, setUser } = useUserContext();
   const onClick = () => {
     localStorage.clear();
     client.resetStore();
@@ -53,6 +53,22 @@ export default function Header() {
                 </li>
               );
             })}
+            {user?.role === 'admin' && (
+              <li key={'admin'}>
+                <NavLink
+                  to="admin"
+                  className={({ isActive, isPending }) =>
+                    isPending
+                      ? 'pending'
+                      : isActive
+                        ? 'active underline underline-offset-8 decoration-blue-400 decoration-2'
+                        : ''
+                  }
+                >
+                  Admin
+                </NavLink>
+              </li>
+            )}
           </ul>
         </div>
         <ul className="right flex gap-6 items-center">

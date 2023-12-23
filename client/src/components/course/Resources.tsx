@@ -3,8 +3,8 @@ import CreateResources from './CreateResources';
 import { GET_RESOURCES_BY_COURSE } from '@/graphql/query';
 import { Collapse, Empty } from 'antd';
 import { useUserContext } from '@/context/userContext';
-import Video from '@/pages/Video';
 import { API_ROUTE } from '@/constants/const';
+import Video from './Video';
 
 export default function Resources({ courseId }) {
   const { user } = useUserContext();
